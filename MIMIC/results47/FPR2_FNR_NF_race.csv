@@ -1,0 +1,2 @@
+,diseases,#White,FPR_White,FNR_White,#Black,FPR_Black,FNR_Black,#Hisp,FPR_Hisp,FNR_Hisp,#Other,FPR_Other,FNR_Other,#Asian,FPR_Asian,FNR_Asian,#American,FPR_American,FNR_American
+0,No Finding,11620,0.174,0.249,2924,0.281,0.159,998,0.29,0.15,725,0.186,0.206,407,0.211,0.142,41,0.171,0.231

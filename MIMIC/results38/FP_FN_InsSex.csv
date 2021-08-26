@@ -1,0 +1,4 @@
+,Insurance,FPR_M,FNR_M,FPR_F,FNR_F
+0,Medicare,0.151,0.338,0.172,0.281
+1,Other,0.186,0.215,0.231,0.146
+2,Medicaid,0.266,0.237,0.271,0.137

@@ -1,0 +1,87 @@
+1 - Train your network using "MODE = train"  --> the trained model will be saved in Checkpoint
+
+Note: We train 5 differenct model where all have the same hyper parameter and set up but they have different random seed. Finally, for all the results presented in the paper we average the results of 5 run and get the confidence interval (CI) and report them. Thus for the results we want to report such as AUCs, TPR disparities, FPRs, etc, when we are generating them it is essencial to remane them such that the name contain the run number. Later we use this naming protocol to gather and averaging the resilts over 5 run. At each section we wrote a guidline about what csv files needed to be raname and how. 
+
+2 - Test your network using "MODE = test" and runing main.py
+* The following csv files are generated:
+    Eval.csv :contain AUC on validation set and 
+    TestEval.csv :  The AUC on test set for the model
+    True.csv : The true labels on Test set
+    preds.csv : The probability of each disease per image
+    bipred.csv : The binary prediction of each label
+    Threshold.csv : The thereshold utilized to get binary predictions from probabilities per disease. It is calculated based on maximizing f1 score on validation set
+    
+Rename TestEval.csv to Evel*.csv, where * is the number of run (e.g Evel1.csv for run1).
+
+3 - Use the TrueDatawithMeta.ipynb to add metadata to the true labels of the test dataset and save it as  True_withMeta.csv. This file and binary prediction bi_pred.csv of each result folder (associated to a random seed) are used to calculated TPRs and FPRs. 
+
+
+4 -  Run the coel "false_pos.py" to calculate:
+a) FPR and FNR per subgroup stored as csv files: 
+    FPR_FNR_NF_race.csv
+    FPR_FNR_NF_insurance.csv
+    FPR_FNR_NF_age.csv
+    FPR_FNR_NF_sex.csv
+
+b) The intersectional identity FPR
+    FP_AgeSex.csv
+    FP_InsRace.csv
+    FP_RaceSex.csv
+    FP_InsSex.csv
+    FP_InsAge.csv
+    FP_RaceAge.csv
+
+c) The number of images per intersection with actual NF = 0
+    Num_AgeSex.csv
+    Num_InsRace.csv
+    Num_RaceSex.csv
+    Num_InsSex.csv
+    Num_InsAge.csv
+    Num_RaceAge.csv
+    
+d) The number of images per intersection with actual NF = 1    
+    Num_AgeSex_NF1.csv
+    Num_InsRace_NF1.csv
+    Num_RaceSex_NF1.csv
+    Num_InsSex_NF1.csv
+    Num_InsAge_NF1.csv
+    Num_RaceAge_NF1.csv    
+    
+
+Rename the csv files of part a and b based on the run number (e.g  FPR_FNR_NF_sex.csv is renamed to FPR1_FNR_NF_sex.csv and FP_InsSex.csv is renamed to FP1_InsSex.csv for first run.)
+
+
+5 - rename the results forlder followed by the applied random seed for the checkpoint. (e.g. for random seed 31 use results31)
+
+Do the step 2 to 6 for all 5 runs per dataset.
+
+6 - create a folder and call it "results" to save the results of combining the 5 run.
+
+--------------------------------
+7 - Run the Confidence.ipynb. It gives:
+    a) Percentage of images per attribiute in whole data (test, train and validation).
+    
+    b) Subgroup-specific underdiagnosis rate: 
+       It return both FPR, FNR and # of patient within the dataset with NF=0.
+       The results are averaged over 5 run i results folder.
+        
+        Subgroun_FNR_FPR_Sex.csv
+        Subgroun_FNR_FPR_Age.csv
+        Subgroun_FNR_FPR_Race.csv
+        Subgroun_FNR_FPR_Insurance.csv
+        
+    c) Intersectional identity underdiagnosis rate.
+    
+        Inter_AgeSex.csv
+        Inter_AgeIns.csv
+        Inter_SexIns.csv
+        Inter_RaceIns.csv
+        Inter_RaceSex.csv
+        Inter_RaceAge.csv
+
+    D) AUC performance with CI over 5 run.
+
+       
+Note: Due to data usage agreement we are not allowed to share the True.csv, Pred.csv or bi_Pred.csv file. However, sine the datasets are enough large if you merge all available data in dataset, make any 80-10-10 train validation and test set split of the dataset you can train your own model using the hyper-parameters that we used in the code, and test it using the prediction.py code and re-generate the results. If you want to test this code exactly on the same test set as our we have provided the Subjrct_ID of the patients in our test set in the testSet_SubjID.csv file.
+
+
