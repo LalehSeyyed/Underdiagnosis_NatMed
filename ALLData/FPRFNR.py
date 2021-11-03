@@ -334,7 +334,7 @@ def FN_NF_CXP_MEMBERSHIP_Num_Inter(TrueWithMeta_df, df, diseases, category1, cat
 
 
 def FPR_Underdiagnosis():
-    #MIMIC data
+    
     diseases = ['No Finding']
     Age = ['40-60', '60-80', '20-40', '80-', '0-20']
     Sex = ['M', 'F']
