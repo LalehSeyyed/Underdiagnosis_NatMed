@@ -886,236 +886,43 @@ def FPR_Underdiagnosis():
     factor_str_MIMIC = ['gender', 'age_decile', 'race', 'insurance']
 
 
-#     FP_NF_MIMIC(TrueWithMeta, pred_MIMIC, diseases_MIMIC, insurance_MIMIC, 'insurance')
-    
-#     FP_NF_MIMIC(TrueWithMeta, pred_MIMIC, diseases_MIMIC, age_decile_MIMIC, 'age_decile')
-    
-#     FP_NF_MIMIC(TrueWithMeta, pred_MIMIC, diseases_MIMIC, race_MIMIC, 'race')
-    
-#     FP_NF_MIMIC(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender')
-
-    
-#--------------------------------------------------------------    
-    #Intersectional-specific Chronic Underdiagnosis
-#--------------------------------------------------------------     
-#     FP_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender',race_MIMIC,'race')
-
-#     FP_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender', insurance_MIMIC, 'insurance')
-
-#     FP_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender', age_decile_MIMIC, 'age_decile')
-    
-#     FP_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, race_MIMIC, 'race', age_decile_MIMIC, 'age_decile')
-    
-#     FP_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, insurance_MIMIC, 'insurance', age_decile_MIMIC, 'age_decile')
-    
-#     FP_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, insurance_MIMIC,'insurance', race_MIMIC, 'race')
-
+    FP_NF_MIMIC(TrueWithMeta, pred_MIMIC, diseases_MIMIC, insurance_MIMIC, 'insurance')    
+    FP_NF_MIMIC(TrueWithMeta, pred_MIMIC, diseases_MIMIC, age_decile_MIMIC, 'age_decile')    
+    FP_NF_MIMIC(TrueWithMeta, pred_MIMIC, diseases_MIMIC, race_MIMIC, 'race')    
+    FP_NF_MIMIC(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender')
 
 #--------------------------------------------
     # Intersection Membership number with actual NoFinding=0
 #----------------------------------------------    
 
-#     FP_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender',race_MIMIC,'race')
-
-#     FP_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender', insurance_MIMIC, 'insurance')
-
-#     FP_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender', age_decile_MIMIC, 'age_decile')
-    
-#     FP_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, race_MIMIC, 'race', age_decile_MIMIC, 'age_decile')
-    
-#     FP_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, insurance_MIMIC, 'insurance', age_decile_MIMIC, 'age_decile')
-    
-#     FP_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, insurance_MIMIC,'insurance', race_MIMIC, 'race')
+    FP_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender',race_MIMIC,'race')
+    FP_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender', insurance_MIMIC, 'insurance')
+    FP_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender', age_decile_MIMIC, 'age_decile')    
+    FP_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, race_MIMIC, 'race', age_decile_MIMIC, 'age_decile')    
+    FP_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, insurance_MIMIC, 'insurance', age_decile_MIMIC, 'age_decile')   
+    FP_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, insurance_MIMIC,'insurance', race_MIMIC, 'race')
 
 #--------------------------------------------
     #Intersection Membership number with actual NoFinding=1
 #----------------------------------------------    
 
     FN_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender',race_MIMIC,'race')
-
     FN_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender', insurance_MIMIC, 'insurance')
-
-    FN_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender', age_decile_MIMIC, 'age_decile')
-    
-    FN_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, race_MIMIC, 'race', age_decile_MIMIC, 'age_decile')
-    
-    FN_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, insurance_MIMIC, 'insurance', age_decile_MIMIC, 'age_decile')
-    
+    FN_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender', age_decile_MIMIC, 'age_decile')   
+    FN_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, race_MIMIC, 'race', age_decile_MIMIC, 'age_decile')    
+    FN_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, insurance_MIMIC, 'insurance', age_decile_MIMIC, 'age_decile')    
     FN_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, insurance_MIMIC,'insurance', race_MIMIC, 'race')
 
 #--------------------------------------------
-#   FPR and FNR  in NF
+#   Intersectional FPR and FNR  in NF
 #----------------------------------------------
     
-#     FP_FN_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender',race_MIMIC,'race')
-
-#     FP_FN_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender', insurance_MIMIC, 'insurance')
-
-#     FP_FN_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender', age_decile_MIMIC, 'age_decile')
-    
-    FP_FN_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, race_MIMIC, 'race', age_decile_MIMIC, 'age_decile')
-    
-#     FP_FN_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, insurance_MIMIC, 'insurance', age_decile_MIMIC, 'age_decile')
-    
-#     FP_FN_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, insurance_MIMIC,'insurance', race_MIMIC, 'race')    
+    FP_FN_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender',race_MIMIC,'race')
+    FP_FN_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender', insurance_MIMIC, 'insurance')
+    FP_FN_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, gender_MIMIC, 'gender', age_decile_MIMIC, 'age_decile')    
+    FP_FN_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, race_MIMIC, 'race', age_decile_MIMIC, 'age_decile')    
+    FP_FN_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, insurance_MIMIC, 'insurance', age_decile_MIMIC, 'age_decile')
+    FP_FN_NF_MIMIC_Inter(TrueWithMeta, pred_MIMIC, diseases_MIMIC, insurance_MIMIC,'insurance', race_MIMIC, 'race')    
     
 
-if __name__ == '__main__':
-    FPR_Underdiagnosis()
-    
-# def FP_NF_MIMIC_Inter(TrueWithMeta_df, df, diseases, category1, category_name1,category2, category_name2 ):
 
-#     df = df.merge(TrueWithMeta_df, left_on="path", right_on="path")
-
-
-#     if (category_name1 == 'gender')  &  (category_name2 == 'insurance'):
-#         FP_InsSex = pd.DataFrame(category2, columns=["Insurance"])
-
-#     if (category_name1 == 'gender')  &  (category_name2 == 'race'):
-#         FP_RaceSex = pd.DataFrame(category2, columns=["race"])
-    
-#     if (category_name1 == 'gender')  &  (category_name2 == 'age_decile'):
-#         FP_AgeSex = pd.DataFrame(category2, columns=["Age"])
-    
-#     if (category_name1 == 'insurance')  &  (category_name2 == 'race'):
-#         FP_InsRace = pd.DataFrame(category2, columns=["race"])
-
-#     if (category_name1 == 'insurance')  &  (category_name2 == 'age_decile'):
-#         FP_InsAge = pd.DataFrame(category2, columns=["age"])        
-
-#     if (category_name1 == 'race')  &  (category_name2 == 'age_decile'):
-#         FP_RaceAge = pd.DataFrame(category2, columns=["age"])         
-
-
-#     print("FP in MIMIC====================================")
-#     i = 0
-#     for c1 in range(len(category1)):
-#         FPR_list = []
-
-#         for c2 in range(len(category2)):
-#             for d in range(len(diseases)):
-#                 pred_disease = "bi_" + diseases[d]
-#                 gt =   df.loc[((df[diseases[d]] == 0)  & (df[category_name1] == category1[c1]) & (df[category_name2] == category2[c2])), :]
-#                 pred = df.loc[((df[pred_disease] == 1) & (df[diseases[d]] == 0) & (df[category_name1] == category1[c1]) & (df[category_name2] == category2[c2])), :]
-                
-                
-
-
-#                 if len(gt) != 0:
-#                     FPR = len(pred) / len(gt)
-#                     print(len(pred),'--' ,len(gt))
-#                     print("False Positive Rate in " + category1[c1] +"/" + category2[c2] + " for " + diseases[d] + " is: " + str(FPR))
-
-#                 else:
-#                     FPR = np.NaN
-#                     print("False Positive Rate in " + category1[c1] +"/" + category2[c2] + " for " + diseases[d] + " is: N\A")
-
-
-#             FPR_list.append(round(FPR,3))
-            
-#         if (category_name1 == 'gender')  &  (category_name2 == 'age_decile'):
-#             if i == 0:
-#                 FPR_SA = pd.DataFrame(FPR_list, columns=["M"])
-#                 FP_AgeSex = pd.concat([FP_AgeSex, FPR_SA.reindex(FP_AgeSex.index)], axis=1)
-
-#             if i == 1:
-#                 FPR_SA = pd.DataFrame(FPR_list, columns=["F"])
-#                 FP_AgeSex = pd.concat([FP_AgeSex, FPR_SA.reindex(FP_AgeSex.index)], axis=1)            
-            
-#         if (category_name1 == 'gender')  &  (category_name2 == 'race'):
-#             if i == 0:
-#                 FPR_SR = pd.DataFrame(FPR_list, columns=["M"])
-#                 FP_RaceSex = pd.concat([FP_RaceSex, FPR_SR.reindex(FP_RaceSex.index)], axis=1)
-
-#             if i == 1:
-#                 FPR_SR = pd.DataFrame(FPR_list, columns=["F"])
-#                 FP_RaceSex = pd.concat([FP_RaceSex, FPR_SR.reindex(FP_RaceSex.index)], axis=1)           
-            
-            
-
-#         if (category_name1 == 'gender')  &  (category_name2 == 'insurance'):
-#             if i == 0:
-#                 FPR_SIn = pd.DataFrame(FPR_list, columns=["M"])
-#                 FP_InsSex = pd.concat([FP_InsSex, FPR_SIn.reindex(FP_InsSex.index)], axis=1)
-
-#             if i == 1:
-#                 FPR_SIn = pd.DataFrame(FPR_list, columns=["F"])
-#                 FP_InsSex = pd.concat([FP_InsSex, FPR_SIn.reindex(FP_InsSex.index)], axis=1)
-
-#         if (category_name1 == 'insurance')  &  (category_name2 == 'race'):
-#             if i == 0:
-#                 FPR_RIn = pd.DataFrame(FPR_list, columns=["Medicare"])
-#                 FP_InsRace = pd.concat([FP_InsRace, FPR_RIn.reindex(FP_InsRace.index)], axis=1)
-
-#             if i == 1:
-#                 FPR_RIn = pd.DataFrame(FPR_list, columns=["Other"])
-#                 FP_InsRace = pd.concat([FP_InsRace, FPR_RIn.reindex(FP_InsRace.index)], axis=1)
-
-#             if i == 2:
-#                 FPR_RIn = pd.DataFrame(FPR_list, columns=["Medicaid"])
-#                 FP_InsRace = pd.concat([FP_InsRace, FPR_RIn.reindex(FP_InsRace.index)], axis=1)
-
-#         if (category_name1 == 'insurance')  &  (category_name2 == 'age_decile'):
-#             if i == 0:
-#                 FPR_RIn = pd.DataFrame(FPR_list, columns=["Medicare"])
-#                 FP_InsAge = pd.concat([FP_InsAge, FPR_RIn.reindex(FP_InsAge.index)], axis=1)
-
-#             if i == 1:
-#                 FPR_RIn = pd.DataFrame(FPR_list, columns=["Other"])
-#                 FP_InsAge = pd.concat([FP_InsAge, FPR_RIn.reindex(FP_InsAge.index)], axis=1)
-
-#             if i == 2:
-#                 FPR_RIn = pd.DataFrame(FPR_list, columns=["Medicaid"])
-#                 FP_InsAge = pd.concat([FP_InsAge, FPR_RIn.reindex(FP_InsAge.index)], axis=1)
-
-
-#         if (category_name1 == 'race')  &  (category_name2 == 'age_decile'):
-#             if i == 0:
-#                 FPR_RIn = pd.DataFrame(FPR_list, columns=["White"])
-#                 FP_RaceAge = pd.concat([FP_RaceAge, FPR_RIn.reindex(FP_RaceAge.index)], axis=1)
-
-#             if i == 1:
-#                 FPR_RIn = pd.DataFrame(FPR_list, columns=["Black"])
-#                 FP_RaceAge = pd.concat([FP_RaceAge, FPR_RIn.reindex(FP_RaceAge.index)], axis=1)
-
-#             if i == 2:
-#                 FPR_RIn = pd.DataFrame(FPR_list, columns=["Hisp"])
-#                 FP_RaceAge = pd.concat([FP_RaceAge, FPR_RIn.reindex(FP_RaceAge.index)], axis=1)                
-
-#             if i == 3:
-#                 FPR_RIn = pd.DataFrame(FPR_list, columns=["Other"])
-#                 FP_RaceAge = pd.concat([FP_RaceAge, FPR_RIn.reindex(FP_RaceAge.index)], axis=1)
-
-#             if i == 4:
-#                 FPR_RIn = pd.DataFrame(FPR_list, columns=["Asian"])
-#                 FP_RaceAge = pd.concat([FP_RaceAge, FPR_RIn.reindex(FP_RaceAge.index)], axis=1)
-
-#             if i == 5:
-#                 FPR_RIn = pd.DataFrame(FPR_list, columns=["American"])
-#                 FP_RaceAge = pd.concat([FP_RaceAge, FPR_RIn.reindex(FP_RaceAge.index)], axis=1)   
-                
-
-#         i = i + 1
-
-#     if (category_name1 == 'gender')  &  (category_name2 == 'insurance'):
-#         FP_InsSex.to_csv("./results/FP_InsSex.csv")
-
-#     if (category_name1 == 'gender')  &  (category_name2 == 'race'):
-#         FP_RaceSex.to_csv("./results/FP_RaceSex.csv")
-
-#     if (category_name1 == 'insurance')  &  (category_name2 == 'race'):
-#         FP_InsRace.to_csv("./results/FP_InsRace.csv")
-    
-#     if (category_name1 == 'insurance')  &  (category_name2 == 'age_decile'):
-#         FP_InsAge.to_csv("./results/FP_InsAge.csv")
-        
-#     if (category_name1 == 'race')  &  (category_name2 == 'age_decile'):
-#         FP_RaceAge.to_csv("./results/FP_RaceAge.csv")    
-    
-#     if (category_name1 == 'gender')  &  (category_name2 == 'age_decile'):
-#         FP_AgeSex.to_csv("./results/FP_AgeSex.csv")
-
-#    #return FPR
-
-
- 

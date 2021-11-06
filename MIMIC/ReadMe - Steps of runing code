@@ -1,9 +1,9 @@
 1 - Train your network using "MODE = train"  --> the trained model will be saved in Checkpoint
 
-Note: We train 5 differenct model where all have the same hyper parameter and set up but they have different random seed. Finally, for all the results presented in the paper we average the results of 5 run and get the confidence interval (CI) and report them. Thus for the results we want to report such as AUCs, TPR disparities, FPRs, etc, when we are generating them it is essencial to remane them such that the name contain the run number. Later we use this naming protocol to gather and averaging the resilts over 5 run. At each section we wrote a guidline about what csv files needed to be raname and how. 
+Note: We train 5 differenct model where all have the same hyper parameter and set up but they have different random seed (e. g. random seeds for MIMIC-CXR are 19, 31, 38 47, 77). Finally, for all the presented results in the paper we average the results of 5 run acheieved from different random seed and estimate the 95% confidence interval (CI). Then models, predicted values, etc per random seed are initially stored in 'results' folder but we later remane each folder name to 'resultsXX' where 'XX' is the utilized random seed (The renaming step is essential as we later use this naming protocol to gather and average the results over 5 run). The current 'results' folder contain the associated results that are achieved by utilizing all the 5 runs.  
 
 2 - Test your network using "MODE = test" and runing main.py
-* The following csv files are generated:
+* The following csv files are generated in the results folder (later renamed to 'resultsXX'):
     Eval.csv :contain AUC on validation set and 
     TestEval.csv :  The AUC on test set for the model
     True.csv : The true labels on Test set
@@ -13,10 +13,11 @@ Note: We train 5 differenct model where all have the same hyper parameter and se
     
 Rename TestEval.csv to Evel*.csv, where * is the number of run (e.g Evel1.csv for run1).
 
-3 - Use the TrueDatawithMeta.ipynb to add metadata to the true labels of the test dataset and save it as  True_withMeta.csv. This file and binary prediction bi_pred.csv of each result folder (associated to a random seed) are used to calculated TPRs and FPRs. 
+3 - Use the TrueDatawithMeta.ipynb to add metadata to the true labels of the test dataset and save it as 'True_withMeta.csv'. This file and binary prediction bi_pred.csv of each result folder (associated to a random seed) are used to calculated FNRs, FPRs, and FDRs. 
 
+Note: We are not able to share 'True_withMeta.csv' and 'bi_pred.csv' due to the data sharing agreement. However the developers are able to download the dataset from the original sourses. Then in the 'Splits' folder you can find the subject ID of train, test, and validation which help to produce the same splits as ours and regenerate same 'True_withMeta.csv'
 
-4 -  Run the coel "false_pos.py" to calculate:
+4 -  Run the coel "FPRFNR.py" to calculate:
 a) FPR and FNR per subgroup stored as csv files: 
     FPR_FNR_NF_race.csv
     FPR_FNR_NF_insurance.csv
