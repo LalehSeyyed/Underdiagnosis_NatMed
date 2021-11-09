@@ -1,48 +1,40 @@
 import torch
 from train import *
 
-from LearningCurve import *
 from predictions import *
 from nih import *
-from Actual_TPR import Actual_TPR
-
 import pandas as pd
 
 #---------------------- on q
-path_image = "/scratch/gobi2/projects/ml4h/datasets/NIH/images/"
+path_image = "/PATH TO DATASET IMAGES IN YOUR SERVER/NIH/images/"
 
-train_df_path ="/scratch/gobi2/projects/ml4h/datasets/NIH/split/July16/train.csv"
-test_df_path = "/scratch/gobi2/projects/ml4h/datasets/NIH/split/July16/test.csv"
-val_df_path = "/scratch/gobi2/projects/ml4h/datasets/NIH/split/July16/valid.csv"
+train_df_path ="/PATH TO DATASET CSV FILES IN YOUR SERVER/split/train.csv"
+test_df_path = "/PATH TO DATASET CSV FILES IN YOUR SERVER/split/test.csv"
+val_df_path = "/PATH TO DATASET CSV FILES IN YOUR SERVER/split/valid.csv"
 
+# We mix all existing data of the provoder regardless of their original validation/train label in the original dataset and split them into 80-10-10 train test and validation sets based on Patient-ID such that no patient images appears in more than one split. 
 
-diseases = ['Atelectasis', 'Cardiomegaly', 'Consolidation', 'Edema',
-       'Effusion', 'Emphysema', 'Fibrosis', 'Hernia', 'Infiltration', 'Mass',
-       'Nodule', 'Pleural_Thickening', 'Pneumonia', 'Pneumothorax']
-# age_decile = ['0-20', '20-40', '40-60', '60-80', '80-']
-age_decile = ['40-60', '60-80', '20-40', '80-', '0-20']
-gender = ['M', 'F']
 
 def main():
 
-    MODE = "plot"  # Select "train" or "test", "Resume", "plot", "Threshold", "plot15"
+    MODE = "train"  # Select "train" or "test", "Resume"
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     train_df = pd.read_csv(train_df_path)
     train_df_size = len(train_df)
-    print("Train_df path", train_df_size)
+    print("Train_df size:", train_df_size)
 
     test_df = pd.read_csv(test_df_path)
     test_df_size = len(test_df)
-    print("test_df path", test_df_size)
+    print("test_df size:", test_df_size)
 
     val_df = pd.read_csv(val_df_path)
     val_df_size = len(val_df)
-    print("val_df path", val_df_size)
+    print("val_df size:", val_df_size)
 
     if MODE == "train":
-        ModelType = "densenet"  # select 'ResNet50','densenet','ResNet34', 'ResNet18'
+        ModelType = "densenet"  # currently code is based on densenet121 
         CriterionType = 'BCELoss'
         LR = 0.5e-3
 
@@ -62,26 +54,11 @@ def main():
 
 
     if MODE == "Resume":
-        ModelType = "Resume"  # select 'ResNet50','densenet','ResNet34', 'ResNet18'
+        ModelType = "Resume"  
         CriterionType = 'BCELoss'
         LR = 0.5e-3
 
         model, best_epoch = ModelTrain(train_df_path, val_df_path, path_image, result_path, ModelType, CriterionType, device,LR)
-
-        PlotLearnignCurve()
-
-    if MODE == "plot":
-        gt = pd.read_csv("./results/True.csv")
-        pred = pd.read_csv("./results/bipred.csv")
-        factor = [gender, age_decile]
-        factor_str = ['Patient Gender', 'Patient Age']
-        for i in range(len(factor)):
-            # plot_frequency(gt, diseases, factor[i], factor_str[i])
-            # plot_TPR_NIH(pred, diseases, factor[i], factor_str[i])
-            plot_sort_median(pred, diseases, factor[i], factor_str[i])
-           # Actual_TPR(pred, diseases, factor[i], factor_str[i])
-
-    #         plot_Median(pred, diseases, factor[i], factor_str[i])
 
 
 if __name__ == "__main__":

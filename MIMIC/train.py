@@ -34,36 +34,13 @@ def ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType,
     start_epoch = 0
     num_epochs = 64  # number of epochs to train for (if early stopping is not triggered)
 
-    # dest_dir = os.path.join(result_path, datetime.datetime.now().strftime('%Y-%m-%d-%H%M%S-%f'))  # ???
-    # os.makedirs(dest_dir)
-
-
-
-    val_df = pd.read_csv(val_df_path)
-    val_df_size = len(val_df)
-    print("Validation_df path",val_df_size)
-
-    train_df = pd.read_csv(train_df_path)
-    train_df_size = len(train_df)
-    print("Train_df path", train_df_size)
-
     random_seed = 47 #random.randint(0,100)
     np.random.seed(random_seed)
     torch.manual_seed(random_seed)
 
-
-
-
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
 
-    # train_loader = torch.utils.data.DataLoader(
-    #     MIMICCXRDataset(train_df, path_image=path_image, transform=transforms.Compose([normalize])),
-    #     batch_size=batch_size, shuffle=True, num_workers=workers, pin_memory=True)
-
-    # val_loader = torch.utils.data.DataLoader(
-    #     MIMICCXRDataset(val_df,path_image=path_image, transform=transforms.Compose([normalize])),
-    #     batch_size=batch_size, shuffle=True, num_workers=workers, pin_memory=True)
     train_loader = torch.utils.data.DataLoader(
         MIMICCXRDataset(train_df, path_image=path_image, transform=transforms.Compose([
                                                                     transforms.RandomHorizontalFlip(),
@@ -91,14 +68,9 @@ def ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType,
 
         model.classifier = nn.Sequential(nn.Linear(num_ftrs, N_LABELS), nn.Sigmoid())
     
-
-        
-
     if ModelType == 'Resume':
         CheckPointData = torch.load('results/checkpoint')
         model = CheckPointData['model']
-
-
 
     if torch.cuda.device_count() > 1:
         print('Using', torch.cuda.device_count(), 'GPUs')

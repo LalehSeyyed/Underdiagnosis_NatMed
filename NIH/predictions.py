@@ -50,7 +50,7 @@ def make_pred_multilabel(model, test_df, val_df, path_image, device):
 
 
 
-    # criterion = nn.BCELoss().to(device)
+    
     model = model.to(device)
     # to find this thresold, first we get the precision and recall withoit this, from there we calculate f1 score, using f1score, we found this theresold which has best precsision and recall.  Then this threshold activation are used to calculate our binary output.
 
@@ -60,7 +60,8 @@ def make_pred_multilabel(model, test_df, val_df, path_image, device):
             'Effusion',
             'Infiltration',
             'Mass',
-            'Nodule',
+            'Nodule', 
+            'No Finding',
             'Pneumonia',
             'Pneumothorax',
             'Consolidation',
@@ -92,6 +93,7 @@ def make_pred_multilabel(model, test_df, val_df, path_image, device):
                     Eval["bestthr"][Eval[Eval["label"] == "Infiltration"].index[0]],
                     Eval["bestthr"][Eval[Eval["label"] == "Mass"].index[0]],
                     Eval["bestthr"][Eval[Eval["label"] == "Nodule"].index[0]],
+                    Eval["bestthr"][Eval[Eval["label"] == "No Finding"].index[0]],
                     Eval["bestthr"][Eval[Eval["label"] == "Pneumonia"].index[0]],
                     Eval["bestthr"][Eval[Eval["label"] == "Pneumothorax"].index[0]],
                     Eval["bestthr"][Eval[Eval["label"] == "Consolidation"].index[0]],
@@ -134,7 +136,8 @@ def make_pred_multilabel(model, test_df, val_df, path_image, device):
                     truerow[PRED_LABEL[k]] = true_labels[j, k]
 
                     if mode == "test":
-                       bi_thisrow["bi_" + PRED_LABEL[k]] = probs[j, k] >= thrs[k]
+                        
+                        bi_thisrow["bi_" + PRED_LABEL[k]] = probs[j, k] >= thrs[k]
 
                 pred_df = pred_df.append(thisrow, ignore_index=True)
                 true_df = true_df.append(truerow, ignore_index=True)
@@ -162,23 +165,7 @@ def make_pred_multilabel(model, test_df, val_df, path_image, device):
                 thisrow['bestthr'] = np.nan
 
             try:
-#                 n_booatraps = 1000
-#                 rng_seed = int(size / 100)
-#                 bootstrapped_scores = []
-
-#                 rng = np.random.RandomState(rng_seed)
-#                 for i in range(n_booatraps):
-#                     indices = rng.random_integers(0, len(actual.as_matrix().astype(int)) - 1, len(pred.as_matrix()))
-#                     if len(np.unique(actual.as_matrix().astype(int)[indices])) < 2:
-#                         continue
-
-#                     score = sklm.roc_auc_score(
-#                         actual.as_matrix().astype(int)[indices], pred.as_matrix()[indices])
-#                     bootstrapped_scores.append(score)
-
-#                 thisrow['auc'] = np.mean(bootstrapped_scores)
                 
-
                 if mode == "test":
                     thisrow['auc'] = sklm.roc_auc_score(
                         actual.as_matrix().astype(int), pred.as_matrix())

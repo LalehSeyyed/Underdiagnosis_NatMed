@@ -41,26 +41,6 @@ def checkpoint(model, best_loss, best_epoch, LR):
     }
     torch.save(state, 'results/checkpoint')
 
-class AverageMeter(object):
-    """
-    Keeps track of most recent, average, sum, and count of a metric.
-    """
-
-    def __init__(self):
-        self.reset()
-
-    def reset(self):
-        self.val = 0
-        self.avg = 0
-        self.sum = 0
-        self.count = 0
-
-    def update(self, val, n=1):
-        self.val = val
-        self.sum += val * n
-        self.count += n
-        self.avg = self.sum / self.count
-
 
 def clip_gradient(optimizer, grad_clip):
     """
@@ -86,3 +66,58 @@ def save_checkpoint(epoch, model, optimizer, LR, dest_dir):
     filename = 'epoch' + str(epoch) + '.pth.tar'
     filename = os.path.join(dest_dir, filename)
     torch.save(state, filename)
+    
+# Function to preprocess the data and the subgroups    
+def preprocess(split):
+    details = pd.read_csv("/scratch/gobi2/projects/ml4h/datasets/CheXpert/map.csv")
+    if 'Atelectasis' in split.columns:
+        details = details.drop(columns=['No Finding',
+       'Enlarged Cardiomediastinum', 'Cardiomegaly', 'Lung Opacity',
+       'Lung Lesion', 'Edema', 'Consolidation', 'Pneumonia', 'Atelectasis',
+       'Pneumothorax', 'Pleural Effusion', 'Pleural Other', 'Fracture',
+       'Support Devices'])
+    split = split.merge(details, left_on="Path", right_on="Path")
+    split['Age'] = np.where(split['Age'].between(0,19), 19, split['Age'])
+    split['Age'] = np.where(split['Age'].between(20,39), 39, split['Age'])
+    split['Age'] = np.where(split['Age'].between(40,59), 59, split['Age'])
+    split['Age'] = np.where(split['Age'].between(60,79), 79, split['Age'])
+    split['Age'] = np.where(split['Age']>=80, 81, split['Age'])
+    split = split.replace([[None], -1, "[False]", "[True]", "[ True]", 19, 39, 59, 79, 81, 'Male', 'Female'], 
+                            [0, 0, 0, 1, 1, "0-20", "20-40", "40-60", "60-80", "80-", 'M', 'F'])
+    return split
+
+def random_split(map_path, total_subject_id, split_portion):
+    df = pd.read_csv(map_path)
+    subject_df = pd.read_csv(total_subject_id)
+    subject_df['random_number'] = np.random.uniform(size=len(subject_df))
+
+
+    train_id = subject_df[subject_df['random_number'] <= split_portion[0]]
+    valid_id = subject_df[(subject_df['random_number'] > split_portion[0]) & (subject_df['random_number'] <= split_portion[1])]
+    test_id = subject_df[subject_df['random_number'] > split_portion[1]]
+
+    train_id = train_id.drop(columns=['random_number'])
+    valid_id = valid_id.drop(columns=['random_number'])
+    test_id = test_id.drop(columns=['random_number'])
+
+    train_id.to_csv("train_id.csv", index=False)
+    valid_id.to_csv("valid_id.csv", index=False)
+    test_id.to_csv("test_id.csv", index=False)
+
+    train_df = train_id.merge(df, left_on="subject_id", right_on="subject_id")
+    valid_df = valid_id.merge(df, left_on="subject_id", right_on="subject_id")
+    test_df = test_id.merge(df, left_on="subject_id", right_on="subject_id")
+
+    print(len(train_df))
+    print(len(valid_df))
+    print(len(test_df))
+
+    train_df.to_csv("new_train.csv", index=False)
+    valid_df.to_csv("new_valid.csv", index=False)
+    test_df.to_csv("new_test.csv", index=False)
+
+
+
+
+
+    

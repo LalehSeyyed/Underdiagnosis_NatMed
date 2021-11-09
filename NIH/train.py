@@ -16,7 +16,6 @@ from dataset import NIH
 from utils import *
 from batchiterator import *
 from tqdm import tqdm
-
 import random
 import numpy as np
 
@@ -29,17 +28,9 @@ def ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType,
     batch_size = 32
 
     workers = 12  # mean: how many subprocesses to use for data loading.
-    N_LABELS = 14
+    N_LABELS = 15
     start_epoch = 0
     num_epochs = 64  # number of epochs to train for (if early stopping is not triggered)
-
-    val_df = pd.read_csv(val_df_path)
-    val_df_size = len(val_df)
-    print("Validation_df path",val_df_size)
-
-    train_df = pd.read_csv(train_df_path)
-    train_df_size = len(train_df)
-    print("Train_df path", train_df_size)
 
     random_seed = 33 #random.randint(0,100)
     np.random.seed(random_seed)
@@ -78,14 +69,9 @@ def ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType,
 
         model.classifier = nn.Sequential(nn.Linear(num_ftrs, N_LABELS), nn.Sigmoid())
     
-
-        
-
     if ModelType == 'Resume':
         CheckPointData = torch.load('results/checkpoint')
         model = CheckPointData['model']
-
-
 
     if torch.cuda.device_count() > 1:
         print('Using', torch.cuda.device_count(), 'GPUs')

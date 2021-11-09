@@ -7,7 +7,7 @@ from PIL import Image
 
 
 class NIH(Dataset):
-    def __init__(self, dataframe, path_image, finding="any", transform=None):
+    def __init__(self, dataframe, path_image, transform=None):
         self.dataframe = dataframe
         # Total number of datapoints
         self.dataset_size = self.dataframe.shape[0]
@@ -15,15 +15,6 @@ class NIH(Dataset):
         self.transform = transform
         self.path_image = path_image
 
-        if not finding == "any":  # can filter for positive findings of the kind described; useful for evaluation
-            if finding in self.dataframe.columns:
-                if len(self.dataframe[self.dataframe[finding] == 1]) > 0:
-                    self.dataframe = self.dataframe[self.dataframe[finding] == 1]
-                else:
-                    print("No positive cases exist for " + finding + ", returning all unfiltered cases")
-            else:
-                print("cannot filter on finding " + finding +
-                      " as not in data - please check spelling")
         self.PRED_LABEL = [
             'Atelectasis',
             'Cardiomegaly',
@@ -31,6 +22,7 @@ class NIH(Dataset):
             'Infiltration',
             'Mass',
             'Nodule',
+            'No Finding',
             'Pneumonia',
             'Pneumothorax',
             'Consolidation',
@@ -63,19 +55,6 @@ class NIH(Dataset):
         for i in range(0, len(self.PRED_LABEL)):
             if (self.dataframe[self.PRED_LABEL[i].strip()].iloc[idx].astype('float') > 0):
                 label[i] = self.dataframe[self.PRED_LABEL[i].strip()].iloc[idx].astype('float')
-#-------------------------------------------------------------------------           
-#         if img.shape == (3, 256, 256):           
-#             img = torch.FloatTensor(img / 255.0)
-           
-#             if self.transform is not None:
-#                 img = self.transform(img)
-
-#             label = torch.FloatTensor(np.zeros(len(self.PRED_LABEL), dtype=float))
-#             for i in range(0, len(self.PRED_LABEL)):
-
-#                 if (self.dataframe[self.PRED_LABEL[i].strip()].iloc[idx].astype('float') > 0):
-#                     label[i] = self.dataframe[self.PRED_LABEL[i].strip()].iloc[idx].astype('float')
-#-------------------------------------------------------------------------
             
         return img, label, item["Image Index"]
 
