@@ -12,9 +12,9 @@ import torchvision.transforms as transforms
 import warnings
 warnings.filterwarnings("ignore")
 import pandas as pd
-from dataset import MIMICCXRDataset
-from utils import *
-from batchiterator import *
+from classification.dataset import MIMICCXRDataset
+from classification.utils import  checkpoint, save_checkpoint, Saved_items
+from classification.batchiterator import BatchIterator
 from tqdm import tqdm
 
 import random
@@ -22,7 +22,7 @@ import numpy as np
 
 
 
-def ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType, device,LR):
+def train(train_df_path, val_df_path, path_image, ModelType, CriterionType, device,LR):
 
 
 
@@ -69,7 +69,7 @@ def ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType,
         model.classifier = nn.Sequential(nn.Linear(num_ftrs, N_LABELS), nn.Sigmoid())
     
     if ModelType == 'Resume':
-        CheckPointData = torch.load('results/checkpoint')
+        CheckPointData = torch.load('./results/checkpoint')
         model = CheckPointData['model']
 
     if torch.cuda.device_count() > 1:
@@ -137,7 +137,7 @@ def ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType,
     print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
     Saved_items(epoch_losses_train, epoch_losses_val, time_elapsed, batch_size)
     #
-    checkpoint_best = torch.load('results/checkpoint')
+    checkpoint_best = torch.load('./results/checkpoint')
     model = checkpoint_best['model']
 
     best_epoch = checkpoint_best['best_epoch']

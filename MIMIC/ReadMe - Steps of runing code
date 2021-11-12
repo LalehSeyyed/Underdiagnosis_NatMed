@@ -1,6 +1,6 @@
 1 - Train your network using "MODE = train"  --> the trained model will be saved in Checkpoint
 
-Note: We train 5 differenct model where all have the same hyper parameter and set up but they have different random seed (e. g. random seeds for MIMIC-CXR are 19, 31, 38 47, 77). Finally, for all the presented results in the paper we average the results of 5 run acheieved from different random seed and estimate the 95% confidence interval (CI). Then models, predicted values, etc per random seed are initially stored in 'results' folder but we later remane each folder name to 'resultsXX' where 'XX' is the utilized random seed (The renaming step is essential as we later use this naming protocol to gather and average the results over 5 run). The current 'results' folder contain the associated results that are achieved by utilizing all the 5 runs.  
+Note: We train 5 differenct model where all have the same hyper parameter and set up but they have different random seed (e. g. random seeds for MIMIC-CXR are 19, 31, 38 47, 77). Finally, for all the presented results in the paper we average the results of 5 run acheieved from different random seed and estimate the 95% confidence interval (CI). Then models, predicted values, etc per random seed are initially stored in 'results' folder inside the 'classification' folder. Once we done all the analysis one one random seed untl step 5 we copy this 'results' to the main root of each dataset (e.g MIMIC folder) and remane them to 'resultsXX' where 'XX' is the utilized random seed (The renaming step is essential as we later use this naming protocol to gather and average the results over 5 run). The current 'results' folder contain the associated results that are achieved by utilizing all the 5 runs.  
 
 2 - Test your network using "MODE = test" and runing main.py
 * The following csv files are generated in the results folder (later renamed to 'resultsXX'):
@@ -11,7 +11,6 @@ Note: We train 5 differenct model where all have the same hyper parameter and se
     bipred.csv : The binary prediction of each label
     Threshold.csv : The thereshold utilized to get binary predictions from probabilities per disease. It is calculated based on maximizing f1 score on validation set
     
-Rename TestEval.csv to Evel*.csv, where * is the number of run (e.g Evel1.csv for run1).
 
 3 - Use the TrueDatawithMeta.ipynb to add metadata to the true labels of the test dataset and save it as 'True_withMeta.csv'. This file and binary prediction bi_pred.csv of each result folder (associated to a random seed) are used to calculated FNRs, FPRs, and FDRs. 
 
@@ -49,10 +48,8 @@ d) The number of images per intersection with actual NF = 1
     Num_RaceAge_NF1.csv    
     
 
-Rename the csv files of part a and b based on the run number (e.g  FPR_FNR_NF_sex.csv is renamed to FPR1_FNR_NF_sex.csv and FP_InsSex.csv is renamed to FP1_InsSex.csv for first run.)
 
-
-5 - rename the results forlder followed by the applied random seed for the checkpoint. (e.g. for random seed 31 use results31)
+5 - rename the results forlder to add the random seed (e.g. for random seed 31 use results31) and copy the 'resultXX' (where XX is the utilized random seed) folder to the main main root of each dataset (e.g MIMIC folder).   
 
 Do the step 2 to 6 for all 5 runs per dataset.
 

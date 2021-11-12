@@ -1,6 +1,6 @@
 
 import torch
-from utils import *
+from classification.utils import clip_gradient
 import numpy as np
 #from evaluation import *
 

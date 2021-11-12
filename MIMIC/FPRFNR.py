@@ -20,7 +20,7 @@ def fpr(df, d, c, category_name):
 
 def preprocess_MIMIC(split):
     # total_subject_id = pd.read_csv("total_subject_id_with_gender.csv")
-    details = pd.read_csv("/scratch/gobi2/projects/ml4h/datasets/new_split/mimic-cxr-metadata-detail.csv")
+    details = pd.read_csv("/PATH TO THE METADATA IN YOUR COMPUTER/mimic-cxr-metadata-detail.csv")
     details = details.drop(columns=['dicom_id', 'study_id'])
     details.drop_duplicates(subset="subject_id", keep="first", inplace=True)
     if "subject_id" not in split.columns:
@@ -134,7 +134,7 @@ def FP_NF_MIMIC(TrueWithMeta_df, df, diseases, category, category_name):
                 FNR_S = pd.DataFrame(FN_total[i], columns=["FNR_F"])
                 FPR_sex = pd.concat([FPR_sex, FNR_S.reindex(FPR_sex.index)], axis=1)
 
-            FPR_sex.to_csv("./results/FPR_FNR_NF_sex.csv")    
+            FPR_sex.to_csv("./classification/results/FPR_FNR_NF_sex.csv")    
 
         if category_name == 'age_decile':
             if i == 0:
@@ -187,7 +187,7 @@ def FP_NF_MIMIC(TrueWithMeta_df, df, diseases, category, category_name):
                 
                 FNR_A = pd.DataFrame(FN_total[i], columns=["FNR_0-20"])
                 FPR_age = pd.concat([FPR_age, FNR_A.reindex(FPR_age.index)], axis=1)
-            FPR_age.to_csv("./results/FPR_FNR_NF_age.csv")
+            FPR_age.to_csv("./classification/results/FPR_FNR_NF_age.csv")
             
         if category_name == 'insurance':
             if i == 0:
@@ -222,7 +222,7 @@ def FP_NF_MIMIC(TrueWithMeta_df, df, diseases, category, category_name):
                 FNR_A = pd.DataFrame(FN_total[i], columns=["FNR_Medicaid"])
                 FPR_Ins = pd.concat([FPR_Ins, FNR_A.reindex(FPR_Ins.index)], axis=1)                   
             
-            FPR_Ins.to_csv("./results/FPR_FNR_NF_insurance.csv")    
+            FPR_Ins.to_csv("./classification/results/FPR_FNR_NF_insurance.csv")    
 
         if category_name == 'race':
             if i == 0:
@@ -294,7 +294,7 @@ def FP_NF_MIMIC(TrueWithMeta_df, df, diseases, category, category_name):
                 FNR_A = pd.DataFrame(FN_total[i], columns=["FNR_American"])
                 FPR_race = pd.concat([FPR_race, FNR_A.reindex(FPR_race.index)], axis=1)    
 
-            FPR_race.to_csv("./results/FPR_FNR_NF_race.csv")  
+            FPR_race.to_csv("./classification/results/FPR_FNR_NF_race.csv")  
 
 
         
@@ -511,22 +511,22 @@ def FP_FN_NF_MIMIC_Inter(TrueWithMeta_df, df, diseases, category1, category_name
         i = i + 1
 
     if (category_name1 == 'gender')  &  (category_name2 == 'insurance'):
-        FP_InsSex.to_csv("./results/FP_FN_InsSex.csv")
+        FP_InsSex.to_csv("./classification/results/FP_FN_InsSex.csv")
 
     if (category_name1 == 'gender')  &  (category_name2 == 'race'):
-        FP_RaceSex.to_csv("./results/FP_FN_RaceSex.csv")
+        FP_RaceSex.to_csv("./classification/results/FP_FN_RaceSex.csv")
 
     if (category_name1 == 'insurance')  &  (category_name2 == 'race'):
-        FP_InsRace.to_csv("./results/FP_FN_InsRace.csv")
+        FP_InsRace.to_csv("./classification/results/FP_FN_InsRace.csv")
     
     if (category_name1 == 'insurance')  &  (category_name2 == 'age_decile'):
-        FP_InsAge.to_csv("./results/FP_FN_InsAge.csv")
+        FP_InsAge.to_csv("./classification/results/FP_FN_InsAge.csv")
         
     if (category_name1 == 'race')  &  (category_name2 == 'age_decile'):
-        FP_RaceAge.to_csv("./results/FP_FN_RaceAge.csv")    
+        FP_RaceAge.to_csv("./classification/results/FP_FN_RaceAge.csv")    
     
     if (category_name1 == 'gender')  &  (category_name2 == 'age_decile'):
-        FP_AgeSex.to_csv("./results/FP_FN_AgeSex.csv")
+        FP_AgeSex.to_csv("./classification/results/FP_FN_AgeSex.csv")
 
    #return FPR
 
@@ -676,22 +676,22 @@ def FP_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta_df, df, diseases, category1, c
         i = i + 1
 
     if (category_name1 == 'gender')  &  (category_name2 == 'insurance'):
-        FP_InsSex.to_csv("./results/Num_InsSex.csv")
+        FP_InsSex.to_csv("./classification/results/Num_InsSex.csv")
 
     if (category_name1 == 'gender')  &  (category_name2 == 'race'):
-        FP_RaceSex.to_csv("./results/Num_RaceSex.csv")
+        FP_RaceSex.to_csv("./classification/results/Num_RaceSex.csv")
 
     if (category_name1 == 'insurance')  &  (category_name2 == 'race'):
-        FP_InsRace.to_csv("./results/Num_InsRace.csv")
+        FP_InsRace.to_csv("./classification/results/Num_InsRace.csv")
     
     if (category_name1 == 'insurance')  &  (category_name2 == 'age_decile'):
-        FP_InsAge.to_csv("./results/Num_InsAge.csv")
+        FP_InsAge.to_csv("./classification/results/Num_InsAge.csv")
         
     if (category_name1 == 'race')  &  (category_name2 == 'age_decile'):
-        FP_RaceAge.to_csv("./results/Num_RaceAge.csv")    
+        FP_RaceAge.to_csv("./classification/results/Num_RaceAge.csv")    
     
     if (category_name1 == 'gender')  &  (category_name2 == 'age_decile'):
-        FP_AgeSex.to_csv("./results/Num_AgeSex.csv")
+        FP_AgeSex.to_csv("./classification/results/Num_AgeSex.csv")
 
    #return FPR
 #-------------------------------------------------
@@ -840,22 +840,22 @@ def FN_NF_MIMIC_MEMBERSHIP_Num_Inter(TrueWithMeta_df, df, diseases, category1, c
         i = i + 1
 
     if (category_name1 == 'gender')  &  (category_name2 == 'insurance'):
-        FP_InsSex.to_csv("./results/Num_InsSex_NF1.csv")
+        FP_InsSex.to_csv("./classification/results/Num_InsSex_NF1.csv")
 
     if (category_name1 == 'gender')  &  (category_name2 == 'race'):
-        FP_RaceSex.to_csv("./results/Num_RaceSex_NF1.csv")
+        FP_RaceSex.to_csv("./classification/results/Num_RaceSex_NF1.csv")
 
     if (category_name1 == 'insurance')  &  (category_name2 == 'race'):
-        FP_InsRace.to_csv("./results/Num_InsRace_NF1.csv")
+        FP_InsRace.to_csv("./classification/results/Num_InsRace_NF1.csv")
     
     if (category_name1 == 'insurance')  &  (category_name2 == 'age_decile'):
-        FP_InsAge.to_csv("./results/Num_InsAge_NF1.csv")
+        FP_InsAge.to_csv("./classification/results/Num_InsAge_NF1.csv")
         
     if (category_name1 == 'race')  &  (category_name2 == 'age_decile'):
-        FP_RaceAge.to_csv("./results/Num_RaceAge_NF1.csv")    
+        FP_RaceAge.to_csv("./classification/results/Num_RaceAge_NF1.csv")    
     
     if (category_name1 == 'gender')  &  (category_name2 == 'age_decile'):
-        FP_AgeSex.to_csv("./results/Num_AgeSex_NF1.csv")
+        FP_AgeSex.to_csv("./classification/results/Num_AgeSex_NF1.csv")
 
    #return FPR
 
@@ -875,7 +875,7 @@ def FPR_Underdiagnosis():
             'OTHER', 'ASIAN', 'AMERICAN INDIAN/ALASKA NATIVE']
     insurance_MIMIC = ['Medicare', 'Other', 'Medicaid']
 
-    pred_MIMIC = pd.read_csv("./results/bipred.csv")
+    pred_MIMIC = pd.read_csv("./classification/results/bipred.csv")
     TrueWithMeta = pd.read_csv("./True_withMeta.csv")  
     # This TrueWithMeta came from adding meta-data to the test data. It is equivalent to : 
     #TrueTest = pd.read_csv("./results/True.csv")

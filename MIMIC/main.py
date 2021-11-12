@@ -1,7 +1,6 @@
 import torch
-from train import *
-from LearningCurve import *
-from predictions import *
+from classification.train import train
+from classification.prediction import make_pred_multilabel
 import pandas as pd
 
 #----------------------------- q
@@ -38,16 +37,16 @@ def main():
         CriterionType = 'BCELoss'
         LR = 0.5e-3
 
-        model, best_epoch = ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType, device,LR)
+        model, best_epoch = train(train_df_path, val_df_path, path_image, ModelType, CriterionType, device,LR)
 
-        PlotLearnignCurve()
+        
 
 
     if MODE =="test":
         val_df = pd.read_csv(val_df_path)
         test_df = pd.read_csv(test_df_path)
 
-        CheckPointData = torch.load('results/checkpoint')
+        CheckPointData = torch.load('./classification/results/checkpoint')
         model = CheckPointData['model']
 
         make_pred_multilabel(model, test_df, val_df, path_image, device)
@@ -58,7 +57,7 @@ def main():
         CriterionType = 'BCELoss'
         LR = 0.5e-3
 
-        model, best_epoch = ModelTrain(train_df_path, val_df_path, path_image, ModelType, CriterionType, device,LR)
+        model, best_epoch = train(train_df_path, val_df_path, path_image, ModelType, CriterionType, device,LR)
 
         PlotLearnignCurve()
 

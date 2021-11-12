@@ -1,4 +1,4 @@
-from dataset import *
+from classification.dataset  import MIMICCXRDataset
 import pandas as pd
 import torch
 import torchvision.transforms as transforms
@@ -152,21 +152,6 @@ def make_pred_multilabel(model, test_df, val_df, path_image, device):
                 thisrow['bestthr'] = np.nan
 
             try:
-#                 n_booatraps = 1000
-#                 rng_seed = int(size / 100)
-#                 bootstrapped_scores = []
-
-#                 rng = np.random.RandomState(rng_seed)
-#                 for i in range(n_booatraps):
-#                     indices = rng.random_integers(0, len(actual.as_matrix().astype(int)) - 1, len(pred.as_matrix()))
-#                     if len(np.unique(actual.as_matrix().astype(int)[indices])) < 2:
-#                         continue
-
-#                     score = sklm.roc_auc_score(
-#                         actual.as_matrix().astype(int)[indices], pred.as_matrix()[indices])
-#                     bootstrapped_scores.append(score)
-
-                #thisrow['auc'] = np.mean(bootstrapped_scores)
                 
                 if mode == "test":
                     thisrow['auc'] = sklm.roc_auc_score(
