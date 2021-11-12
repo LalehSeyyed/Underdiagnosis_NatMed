@@ -4,25 +4,25 @@ import numpy as np
 
 
 #----------------------------- q
-path_image_MIMIC = "/scratch/gobi2/projects/ml4h/projects/mimic_access_required/MIMIC-CXR/"
+path_image_MIMIC = "/PATH TO MIMIC DATASET IMAGES IN YOUR SERVER/split/MIMIC-CXR/"
 
 
-train_df_path_MIMIC ="/scratch/gobi2/projects/ml4h/datasets/new_split/8-1-1/new_train.csv"
-test_df_path_MIMIC ="/scratch/gobi2/projects/ml4h/datasets/new_split/8-1-1/new_test.csv"
-val_df_path_MIMIC = "/scratch/gobi2/projects/ml4h/datasets/new_split/8-1-1/new_valid.csv"
+train_df_path_MIMIC ="/PATH TO DATASET CSV FILES IN YOUR SERVER/split/new_train.csv"
+test_df_path_MIMIC ="/PATH TO DATASET CSV FILES IN YOUR SERVER/split/new_test.csv"
+val_df_path_MIMIC = "/PATH TO DATASET CSV FILES IN YOUR SERVER/split/new_valid.csv"
 
-path_image_NIH = "/scratch/gobi2/projects/ml4h/datasets/NIH/images/"
+path_image_NIH = "/PATH TO NIH DATASET IMAGES IN YOUR SERVER/images/"
 
-train_df_path_NIH ="/scratch/gobi2/projects/ml4h/datasets/NIH/split/July16/train.csv"
-test_df_path_NIH = "/scratch/gobi2/projects/ml4h/datasets/NIH/split/July16/test.csv"
-val_df_path_NIH = "/scratch/gobi2/projects/ml4h/datasets/NIH/split/July16/valid.csv"
+train_df_path_NIH ="/PATH TO DATASET CSV FILES IN YOUR SERVER/split/train.csv"
+test_df_path_NIH = "/PATH TO DATASET CSV FILES IN YOUR SERVER/split/test.csv"
+val_df_path_NIH = "/PATH TO DATASET CSV FILES IN YOUR SERVER/split/valid.csv"
 
-path_image_CXP = "/scratch/gobi2/projects/ml4h/datasets/CheXpert/"
+path_image_CXP = "/PATH TO CXP DATASET IMAGES IN YOUR SERVER/CheXpert/"
 
 
-train_df_path_CXP ="/scratch/gobi2/projects/ml4h/datasets/CheXpert/split/July19/new_train.csv"
-test_df_path_CXP ="/scratch/gobi2/projects/ml4h/datasets/CheXpert/split/July19/new_test.csv"
-val_df_path_CXP = "/scratch/gobi2/projects/ml4h/datasets/CheXpert/split/July19/new_valid.csv"
+train_df_path_CXP ="/PATH TO CXP DATASET CSV FILES IN YOUR SERVER/split/new_train.csv"
+test_df_path_CXP ="/PATH TO CXP DATASET CSV FILES IN YOUR SERVER/split/new_test.csv"
+val_df_path_CXP = "/PATH TO CXP DATASET CSV FILES IN YOUR SERVER/split/new_valid.csv"
 
 val_df_NIH = pd.read_csv(val_df_path_NIH)
 val_df_CXP = pd.read_csv(val_df_path_CXP)
@@ -38,7 +38,7 @@ train_df_MIMIC = pd.read_csv(train_df_path_MIMIC)
 
 def preprocess_MIMIC(split):
     
-    details = pd.read_csv("/scratch/gobi2/projects/ml4h/datasets/new_split/mimic-cxr-metadata-detail.csv")
+    details = pd.read_csv("/PATH TO MIMIC METADATA/mimic-cxr-metadata-detail.csv")
     details = details.drop(columns=['dicom_id', 'study_id', 'religion', 'race', 'insurance', 'marital_status', 'gender'])
     details.drop_duplicates(subset="subject_id", keep="first", inplace=True)
     df = pd.merge(split, details)
@@ -126,22 +126,6 @@ train_df_NIH['Jointpath']   = path_image_NIH   + train_df_NIH['Image Index'].ast
 val_df_MIMIC['Jointpath'] = path_image_MIMIC + val_df_MIMIC['path'].astype(str)
 val_df_CXP['Jointpath']   = path_image_CXP   + val_df_CXP['Path'].astype(str)
 val_df_NIH['Jointpath']   = path_image_NIH   + val_df_NIH['Image Index'].astype(str)
-
-# val_df_NIH["subject_id"] = "NIH-" + val_df_NIH['Patient ID'].astype(str)
-# val_df_CXP["subject_id"] = "CXP-" + val_df_CXP['subject_id'].astype(str)
-# val_df_MIMIC["subject_id"] = "CXR-" + val_df_MIMIC['subject_id'].astype(str)
-
-# test_df_NIH["subject_id"] = "NIH-" + test_df_NIH['Patient ID'].astype(str)
-# test_df_CXP["subject_id"] = "CXP-" + test_df_CXP['subject_id'].astype(str)
-# test_df_MIMIC["subject_id"] = "CXR-" + test_df_MIMIC['subject_id'].astype(str)
-
-# train_df_NIH["subject_id"] = "NIH-" + train_df_NIH['Patient ID'].astype(str)
-# train_df_CXP["subject_id"] = "CXP-" + train_df_CXP['subject_id'].astype(str)
-# train_df_MIMIC["subject_id"] = "CXR-" + train_df_MIMIC['subject_id'].astype(str)
-
-
-
-
 
 val_df_NIH["subject_id"] =  val_df_NIH['subject_id'].astype(int)
 val_df_CXP["subject_id"] =  val_df_CXP['subject_id'].astype(int)

@@ -17,15 +17,6 @@ class MIMICCXRDataset(Dataset):
         self.transform = transform
         self.path_image = path_image
 
-        if not finding == "any":  # can filter for positive findings of the kind described; useful for evaluation
-            if finding in self.dataframe.columns:
-                if len(self.dataframe[self.dataframe[finding] == 1]) > 0:
-                    self.dataframe = self.dataframe[self.dataframe[finding] == 1]
-                else:
-                    print("No positive cases exist for " + finding + ", returning all unfiltered cases")
-            else:
-                print("cannot filter on finding " + finding +
-                      " as not in data - please check spelling")
         self.PRED_LABEL = [
             'No Finding',
             'Enlarged Cardiomediastinum',
