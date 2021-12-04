@@ -210,7 +210,7 @@ def make_pred_multilabel(model, test_df, val_df, PATH_TO_IMAGES, device):
             bi_pred_df.to_csv("results/bipred.csv", index=False)
 
     
-    print("AUC ave:", TestEval_df['auc'].sum() / 14.0)
+    print("AUC ave:", TestEval_df['auc'].sum() / 15.0)
 
     print("done")
 

@@ -1,4 +1,4 @@
-from dataset import CheXpert
+from classification.dataset import CheXpert
 import pandas as pd
 import torch
 import torchvision.transforms as transforms
@@ -9,37 +9,44 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 
 
-def make_pred_multilabel(model, test_df, val_df, path_image, device):
+def make_pred_multilabel(model, test_df, val_df, PATH_TO_IMAGES, device):
+    
     """
-    Gives predictions for test fold and calculates AUCs using previously trained model
-    Args:
-
+        This function gives predictions for test fold and calculates AUCs using previously trained model.
+        
+        Arguments:
         model: densenet-121 from torchvision previously fine tuned to training data
-        test_df : dataframe csv file
-        PATH_TO_IMAGES:
-    Returns:
-        pred_df: dataframe containing individual predictions and ground truth for each test image
-        auc_df: dataframe containing aggregate AUCs by train/test tuples
+        val_df : validation dataframe -- to evaluate the threshold for binary classificaion
+        test_df : test dataframe 
+        PATH_TO_IMAGES: Path to the image directory on the server
+        
+        Returns:
+        pred_df.csv: dataframe containing individual predictions for each test image
+        Threshold.csv: the thereshold we used for binary prediction based on maximizing the F1 score over all labels on the validation set
+        bipred.csv: dataframe containing individual binary predictions for each test image
+        True.csv: dataframe containing true labels
+        TestEval.csv: dataframe containing AUCs per label
+        
     """
 
     BATCH_SIZE = 32
-    workers = 12
+    WORKERS = 12
 
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 
-    dataset_test = CheXpert(test_df, path_image=path_image, transform=transforms.Compose([
+    dataset_test = CheXpert(test_df, path_image=PATH_TO_IMAGES, transform=transforms.Compose([
         transforms.Scale(256),
         transforms.CenterCrop(256),
         transforms.ToTensor(),
         normalize]))
-    test_loader = torch.utils.data.DataLoader(dataset_test, BATCH_SIZE, shuffle=True, num_workers=workers, pin_memory=True)
+    test_loader = torch.utils.data.DataLoader(dataset_test, BATCH_SIZE, shuffle=True, num_workers=WORKERS, pin_memory=True)
 
-    dataset_val = CheXpert(val_df, path_image=path_image, transform=transforms.Compose([
+    dataset_val = CheXpert(val_df, path_image=PATH_TO_IMAGES, transform=transforms.Compose([
         transforms.Scale(256),
         transforms.CenterCrop(256),
         transforms.ToTensor(),
         normalize]))
-    val_loader = torch.utils.data.DataLoader(dataset_val, BATCH_SIZE, shuffle=True, num_workers=workers, pin_memory=True)
+    val_loader = torch.utils.data.DataLoader(dataset_val, BATCH_SIZE, shuffle=True, num_workers=WORKERS, pin_memory=True)
 
 
     size = len(test_df)
@@ -49,13 +56,23 @@ def make_pred_multilabel(model, test_df, val_df, path_image, device):
 
 
 
-    # criterion = nn.BCELoss().to(device)
     model = model.to(device)
     # to find this thresold, first we get the precision and recall withoit this, from there we calculate f1 score, using f1score, we found this theresold which has best precsision and recall.  Then this threshold activation are used to calculate our binary output.
 
-    PRED_LABEL = PRED_LABEL = ['No Finding', 'Enlarged Cardiomediastinum', 'Cardiomegaly', 'Lung Opacity', 'Lung Lesion',
-            'Edema', 'Consolidation', 'Pneumonia','Atelectasis','Pneumothorax', 'Pleural Effusion', 'Pleural Other',
-            'Fracture',  'Support Devices']
+    PRED_LABEL = ['No Finding',
+                  'Enlarged Cardiomediastinum', 
+                  'Cardiomegaly',
+                  'Lung Opacity',
+                  'Lung Lesion',
+                  'Edema',
+                  'Consolidation',
+                  'Pneumonia',
+                  'Atelectasis',
+                  'Pneumothorax',
+                  'Pleural Effusion',
+                  'Pleural Other',     
+                  'Fracture', 
+                  'Support Devices']
 
     for mode in ["Threshold", "test"]:
         # create empty dfs
@@ -72,7 +89,7 @@ def make_pred_multilabel(model, test_df, val_df, path_image, device):
             loader = test_loader
             TestEval_df = pd.DataFrame(columns=["label", 'auc', "auprc"])
             
-            Eval = pd.read_csv("./results/Thereshold.csv")
+            Eval = pd.read_csv("./results/Threshold.csv")
             thrs = [Eval["bestthr"][Eval[Eval["label"]=="No Finding"].index[0]],
                     Eval["bestthr"][Eval[Eval["label"]=="Enlarged Cardiomediastinum"].index[0]],
                     Eval["bestthr"][Eval[Eval["label"]=="Cardiomegaly"].index[0]],
@@ -186,7 +203,7 @@ def make_pred_multilabel(model, test_df, val_df, path_image, device):
         true_df.to_csv("results/True.csv", index=False)
 
         if mode == "Threshold":
-            Eval_df.to_csv("results/Thereshold.csv", index=False)
+            Eval_df.to_csv("results/Threshold.csv", index=False)
 
         if mode == "test":
             TestEval_df.to_csv("results/TestEval.csv", index=False)

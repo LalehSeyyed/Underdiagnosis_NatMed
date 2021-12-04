@@ -20,7 +20,7 @@ import random
 import numpy as np
 
 
-def train(train_df, val_df, path_image, modeltype, CRITERION, device,lr):
+def train(train_df, val_df, PATH_TO_IMAGES, modeltype, CRITERION, device,lr):
 
     """
         This function train the model.
@@ -61,7 +61,7 @@ def train(train_df, val_df, path_image, modeltype, CRITERION, device,lr):
                                      std=[0.229, 0.224, 0.225])
 
     train_loader = torch.utils.data.DataLoader(
-        NIH(train_df, path_image=path_image, transform=transforms.Compose([
+        NIH(train_df, path_image=PATH_TO_IMAGES, transform=transforms.Compose([
                                                                     transforms.RandomHorizontalFlip(),
                                                                     transforms.RandomRotation(10),
                                                                     transforms.Scale(256),
@@ -72,7 +72,7 @@ def train(train_df, val_df, path_image, modeltype, CRITERION, device,lr):
         batch_size=BATCH_SIZE, shuffle=True, num_workers=WORKERS, pin_memory=True)
 
     val_loader = torch.utils.data.DataLoader(
-        NIH(val_df,path_image=path_image, transform=transforms.Compose([
+        NIH(val_df,path_image=PATH_TO_IMAGES, transform=transforms.Compose([
                                                                 transforms.Scale(256),
                                                                 transforms.CenterCrop(256),
                                                                 transforms.ToTensor(),
@@ -137,8 +137,8 @@ def train(train_df, val_df, path_image, modeltype, CRITERION, device,lr):
         with open("results/log_train", 'a') as logfile:
             logwriter = csv.writer(logfile, delimiter=',')
             if (epoch == 1):
-                logwriter.writerow(["epoch", "train_loss", "val_loss","Seed","lr"])
-            logwriter.writerow([epoch, epoch_loss_train, epoch_loss_val,random_seed, lr])
+                logwriter.writerow(["epoch", "train_loss", "val_loss", "seed", "lr"])
+            logwriter.writerow([epoch, epoch_loss_train, epoch_loss_val, random_seed, lr])
 # -------------------------- End of phase
 
         # break if no val loss improvement in 3 epochs

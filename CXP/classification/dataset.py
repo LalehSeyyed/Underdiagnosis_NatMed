@@ -2,20 +2,29 @@ import torch
 from torch.utils.data import Dataset
 import os
 import numpy as np
-from scipy.misc import imread, imresize
+from scipy.misc import imread
 from PIL import Image
-
-
-
+       
 
 class CheXpert(Dataset):
-    def __init__(self, dataframe, path_image, finding="any", transform=None):
-        self.dataframe = dataframe
-        # Total number of datapoints
+    def __init__(self, dataframe, PATH_TO_IMAGES, transform=None):
+        
+        """
+            Dataset class representing ChestX-ray14 dataset
+            
+            Arguments:
+            dataframe: Whether the dataset represents the train, test, or validation split
+            PATH_TO_IMAGES: Path to the image directory on the server
+            transform: Whether conduct transform to the images or not
+            
+            Returns:
+            image, label and item["Image Index"] as the unique indicator of each item in the dataloader.
+        """
+        
+        self.dataframe = dataframe        
         self.dataset_size = self.dataframe.shape[0]
-        self.finding = finding
         self.transform = transform
-        self.path_image = path_image
+        self.PATH_TO_IMAGES = PATH_TO_IMAGES
 
         self.PRED_LABEL = [
             'No Finding',
@@ -36,16 +45,12 @@ class CheXpert(Dataset):
     def __getitem__(self, idx):
         item = self.dataframe.iloc[idx]
 
-        img = imread(os.path.join(self.path_image, item["Path"]))
+        img = imread(os.path.join(self.PATH_TO_IMAGES, item["Path"]))
         if len(img.shape) == 2:
             img = img[:, :, np.newaxis]
             img = np.concatenate([img, img, img], axis=2)
         img = Image.fromarray(img)
-        # img = imresize(img, (256, 256))
-        # img = img.transpose(2, 0, 1)
-        # assert img.shape == (3, 256, 256)
-        # assert np.max(img) <= 255
-        # img = torch.FloatTensor(img / 255.)
+
         if self.transform is not None:
             img = self.transform(img)
 
@@ -56,7 +61,7 @@ class CheXpert(Dataset):
             if (self.dataframe[self.PRED_LABEL[i].strip()].iloc[idx].astype('float') > 0):
                 label[i] = self.dataframe[self.PRED_LABEL[i].strip()].iloc[idx].astype('float')
 
-        return img, label, item["Path"]#self.dataframe.index[idx]
+        return img, label, item["Path"]
 
     def __len__(self):
         return self.dataset_size

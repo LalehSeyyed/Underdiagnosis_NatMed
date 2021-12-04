@@ -15,13 +15,13 @@ VAL_DF_PATH = "/PATH TO DATASET CSV FILES IN YOUR SERVER/split/valid.csv"
 
 def main():
 
-    MODE = "train"  # Select "train" or "test", "resume"
+    MODE = "train"  # Select "train", "test", or "resume"
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     train_df = pd.read_csv(TRAIN_DF_PATH)
     train_df_size = len(train_df)
-    print("Train_df size:", train_df_size)
+    print("train_df size:", train_df_size)
 
     test_df = pd.read_csv(TEST_DF_PATH)
     test_df_size = len(test_df)
@@ -32,13 +32,11 @@ def main():
     print("val_df size:", val_df_size)
 
     if MODE == "train":
-        ModelType = "densenet"  # currently code is based on densenet121 
+        modeltype = "densenet"  # currently code is based on densenet121 
         CRITERION = 'BCELoss'
         lr = 0.5e-3
 
-        model, best_epoch = train(train_df, val_df, PATH_TO_IMAGES, ModelType, CRITERION, device,lr)
-
-        PlotLearnignCurve()
+        model, best_epoch = train(train_df, val_df, PATH_TO_IMAGES, modeltype, CRITERION, device,lr)
 
 
     if MODE =="test":
@@ -52,11 +50,11 @@ def main():
 
 
     if MODE == "resume":
-        ModelType = "resume"  
+        modeltype = "resume"  
         CRITERION = 'BCELoss'
         lr = 0.5e-3
 
-        model, best_epoch = train(train_df, val_df, PATH_TO_IMAGES, ModelType, CRITERION, device,lr)
+        model, best_epoch = train(train_df, val_df, PATH_TO_IMAGES, modeltype, CRITERION, device,lr)
 
 
 if __name__ == "__main__":
