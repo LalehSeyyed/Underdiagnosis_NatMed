@@ -33,11 +33,11 @@ def main():
 
 
     if MODE == "train":
-        ModelType = "densenet"  # currently code is based on densenet121 
-        CriterionType = 'BCELoss'
-        LR = 0.5e-3
+        modeltype = "densenet"  # currently code is based on densenet121 
+        CRITERION = 'BCELoss'
+        lr = 0.5e-3
 
-        model, best_epoch = train(train_df, val_df, PATH_TO_IMAGES, ModelType, CriterionType, device,LR)
+        model, best_epoch = train(train_df, val_df, PATH_TO_IMAGES, modeltype, CRITERION, device,lr)
 
         
 
@@ -52,12 +52,12 @@ def main():
         make_pred_multilabel(model, test_df, val_df, PATH_TO_IMAGES, device)
 
 
-    if MODE == "Resume":
-        ModelType = "Resume" 
-        CriterionType = 'BCELoss'
-        LR = 0.5e-3
+    if MODE == "resume":
+        modeltype = "resume" 
+        CRITERION = 'BCELoss'
+        lr = 0.5e-3
 
-        model, best_epoch = train(train_df, val_df, PATH_TO_IMAGES, ModelType, CriterionType, device,LR)
+        model, best_epoch = train(train_df, val_df, PATH_TO_IMAGES, modeltype, CRITERION, device,lr)
         
         
         PlotLearnignCurve()

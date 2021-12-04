@@ -3,7 +3,7 @@ import torch
 from classification.utils import clip_gradient
 import numpy as np
 
-def BatchIterator(model, phase,
+def batch_iterator(model, phase,
         data_loader,
         criterion,
         optimizer,

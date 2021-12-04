@@ -3,11 +3,12 @@ import torch
 from classification.utils import clip_gradient
 import numpy as np
 
-def BatchIterator(model, phase,
-        dataloader,
-        criterion,
-        optimizer,
-        device):
+def batch_iterator(model, 
+                   phase,
+                   dataloader,
+                   criterion,
+                   optimizer,
+                   device):
     
     '''
         It is a function that iterates over the data in dataloader.

@@ -1,8 +1,6 @@
 import torch
-from train import *
-
-from predictions import *
-from nih import *
+from classification.train import train
+from classification.prediction import make_pred_multilabel
 import pandas as pd
 
 #---------------------- on q
@@ -17,7 +15,7 @@ VAL_DF_PATH = "/PATH TO DATASET CSV FILES IN YOUR SERVER/split/valid.csv"
 
 def main():
 
-    MODE = "train"  # Select "train" or "test", "Resume"
+    MODE = "train"  # Select "train" or "test", "resume"
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -35,10 +33,10 @@ def main():
 
     if MODE == "train":
         ModelType = "densenet"  # currently code is based on densenet121 
-        CriterionType = 'BCELoss'
-        LR = 0.5e-3
+        CRITERION = 'BCELoss'
+        lr = 0.5e-3
 
-        model, best_epoch = train(train_df, val_df, PATH_TO_IMAGES, ModelType, CriterionType, device,LR)
+        model, best_epoch = train(train_df, val_df, PATH_TO_IMAGES, ModelType, CRITERION, device,lr)
 
         PlotLearnignCurve()
 
@@ -53,12 +51,12 @@ def main():
         make_pred_multilabel(model, test_df, val_df, PATH_TO_IMAGES, device)
 
 
-    if MODE == "Resume":
-        ModelType = "Resume"  
-        CriterionType = 'BCELoss'
-        LR = 0.5e-3
+    if MODE == "resume":
+        ModelType = "resume"  
+        CRITERION = 'BCELoss'
+        lr = 0.5e-3
 
-        model, best_epoch = train(train_df, val_df, PATH_TO_IMAGES, ModelType, CriterionType, device,LR)
+        model, best_epoch = train(train_df, val_df, PATH_TO_IMAGES, ModelType, CRITERION, device,lr)
 
 
 if __name__ == "__main__":
