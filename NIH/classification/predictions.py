@@ -1,4 +1,4 @@
-from classification.dataset  import MIMICCXRDataset
+from classification.dataset import NIH
 import pandas as pd
 import torch
 import torchvision.transforms as transforms
@@ -10,7 +10,6 @@ from sklearn.metrics import accuracy_score
 
 
 def make_pred_multilabel(model, test_df, val_df, PATH_TO_IMAGES, device):
-    
     """
         This function gives predictions for test fold and calculates AUCs using previously trained model.
         
@@ -34,20 +33,21 @@ def make_pred_multilabel(model, test_df, val_df, PATH_TO_IMAGES, device):
 
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 
-    dataset_test = MIMICCXRDataset(test_df, path_image=PATH_TO_IMAGES, transform=transforms.Compose([
+    dataset_test = NIH(test_df, path_image= PATH_TO_IMAGES, transform=transforms.Compose([
         transforms.Scale(256),
         transforms.CenterCrop(256),
         transforms.ToTensor(),
         normalize]))
-    test_loader = torch.utils.data.DataLoader(dataset_test, BATCH_SIZE, shuffle=True, num_workers = WORKERS, pin_memory=True)
+    test_loader = torch.utils.data.DataLoader(dataset_test, BATCH_SIZE, shuffle=True, num_workers = WORKERS,
+                                              pin_memory=True)
 
-    dataset_val = MIMICCXRDataset(val_df, path_image = PATH_TO_IMAGES, transform=transforms.Compose([
+    dataset_val = NIH(val_df, path_image= PATH_TO_IMAGES, transform=transforms.Compose([
         transforms.Scale(256),
         transforms.CenterCrop(256),
         transforms.ToTensor(),
         normalize]))
-    val_loader = torch.utils.data.DataLoader(dataset_val, BATCH_SIZE, shuffle=True, num_workers = WORKERS, pin_memory=True)
-
+    val_loader = torch.utils.data.DataLoader(dataset_val, BATCH_SIZE, shuffle=True, num_workers = WORKERS,
+                                             pin_memory=True)
 
     size = len(test_df)
     print("Test _df size :", size)
@@ -56,12 +56,26 @@ def make_pred_multilabel(model, test_df, val_df, PATH_TO_IMAGES, device):
 
 
 
-    # criterion = nn.BCELoss().to(device)
+    
     model = model.to(device)
     # to find this thresold, first we get the precision and recall withoit this, from there we calculate f1 score, using f1score, we found this theresold which has best precsision and recall.  Then this threshold activation are used to calculate our binary output.
 
-    PRED_LABEL = ['No Finding','Enlarged Cardiomediastinum','Cardiomegaly','Lung Lesion','Airspace Opacity','Edema',
-        'Consolidation', 'Pneumonia','Atelectasis','Pneumothorax', 'Pleural Effusion', 'Pleural Other', 'Fracture', 'Support Devices']
+
+    PRED_LABEL = ['Atelectasis',
+            'Cardiomegaly',
+            'Effusion',
+            'Infiltration',
+            'Mass',
+            'Nodule', 
+            'No Finding',
+            'Pneumonia',
+            'Pneumothorax',
+            'Consolidation',
+            'Edema',
+            'Emphysema',
+            'Fibrosis',
+            'Pleural_Thickening',
+            'Hernia']
 
     for mode in ["Threshold", "test"]:
         # create empty dfs
@@ -71,29 +85,29 @@ def make_pred_multilabel(model, test_df, val_df, PATH_TO_IMAGES, device):
 
         if mode == "Threshold":
             loader = val_loader
-            Eval_df = pd.DataFrame(columns=["label",'bestthr'])    
-            thrs = []            
-        
+            Eval_df = pd.DataFrame(columns=["label", 'bestthr'])
+            thrs = []
+
         if mode == "test":
             loader = test_loader
             TestEval_df = pd.DataFrame(columns=["label", 'auc', "auprc"])
-            
+
             Eval = pd.read_csv("./results/Threshold.csv")
-            thrs = [Eval["bestthr"][Eval[Eval["label"]=="No Finding"].index[0]],
-                    Eval["bestthr"][Eval[Eval["label"]=="Enlarged Cardiomediastinum"].index[0]],
-                    Eval["bestthr"][Eval[Eval["label"]=="Cardiomegaly"].index[0]],
-                    Eval["bestthr"][Eval[Eval["label"]== "Lung Lesion"].index[0]],
-                    Eval["bestthr"][Eval[Eval["label"]=="Airspace Opacity"].index[0]],
-                    Eval["bestthr"][Eval[Eval["label"]=="Edema"].index[0]],
-                    Eval["bestthr"][Eval[Eval["label"]=="Consolidation"].index[0]],
-                    Eval["bestthr"][Eval[Eval["label"]=="Pneumonia"].index[0]],
-                    Eval["bestthr"][Eval[Eval["label"]=="Atelectasis"].index[0]],
-                    Eval["bestthr"][Eval[Eval["label"]=="Pneumothorax"].index[0]],
-                    Eval["bestthr"][Eval[Eval["label"]=="Pleural Effusion"].index[0]],
-                    Eval["bestthr"][Eval[Eval["label"]=="Pleural Other"].index[0]],
-                    Eval["bestthr"][Eval[Eval["label"]=="Fracture"].index[0]],
-                    Eval["bestthr"][Eval[Eval["label"]=="Support Devices"].index[0]]]
-        
+            thrs = [Eval["bestthr"][Eval[Eval["label"] == "Atelectasis"].index[0]],
+                    Eval["bestthr"][Eval[Eval["label"] == "Cardiomegaly"].index[0]],
+                    Eval["bestthr"][Eval[Eval["label"] == "Effusion"].index[0]],
+                    Eval["bestthr"][Eval[Eval["label"] == "Infiltration"].index[0]],
+                    Eval["bestthr"][Eval[Eval["label"] == "Mass"].index[0]],
+                    Eval["bestthr"][Eval[Eval["label"] == "Nodule"].index[0]],
+                    Eval["bestthr"][Eval[Eval["label"] == "No Finding"].index[0]],
+                    Eval["bestthr"][Eval[Eval["label"] == "Pneumonia"].index[0]],
+                    Eval["bestthr"][Eval[Eval["label"] == "Pneumothorax"].index[0]],
+                    Eval["bestthr"][Eval[Eval["label"] == "Consolidation"].index[0]],
+                    Eval["bestthr"][Eval[Eval["label"] == "Edema"].index[0]],
+                    Eval["bestthr"][Eval[Eval["label"] == "Emphysema"].index[0]],
+                    Eval["bestthr"][Eval[Eval["label"] == "Fibrosis"].index[0]],
+                    Eval["bestthr"][Eval[Eval["label"] == "Pleural_Thickening"].index[0]],
+                    Eval["bestthr"][Eval[Eval["label"] == "Hernia"].index[0]]]
 
         for i, data in enumerate(loader):
             inputs, labels, item = data
@@ -121,38 +135,36 @@ def make_pred_multilabel(model, test_df, val_df, PATH_TO_IMAGES, device):
                 if mode == "test":
                     bi_thisrow["path"] = item[j]
 
-                # iterate over each entry in prediction vector; each corresponds to
-                # individual label
+                    # iterate over each entry in prediction vector; each corresponds to
+                    # individual label
                 for k in range(len(PRED_LABEL)):
                     thisrow["prob_" + PRED_LABEL[k]] = probs[j, k]
                     truerow[PRED_LABEL[k]] = true_labels[j, k]
 
                     if mode == "test":
+                        
                         bi_thisrow["bi_" + PRED_LABEL[k]] = probs[j, k] >= thrs[k]
 
                 pred_df = pred_df.append(thisrow, ignore_index=True)
                 true_df = true_df.append(truerow, ignore_index=True)
                 if mode == "test":
                     bi_pred_df = bi_pred_df.append(bi_thisrow, ignore_index=True)
-           
+
             if (i % 200 == 0):
                 print(str(i * BATCH_SIZE))
 
 
- 
         for column in true_df:
             if column not in PRED_LABEL:
-                    continue
+                continue
             actual = true_df[column]
             pred = pred_df["prob_" + column]
-#             if mode == "test":
-#                 bi_pred = bi_pred_df["bi_" + column]
-
+            
             thisrow = {}
-
             thisrow['label'] = column
+            
             if mode == "test":
-                bi_pred = bi_pred_df["bi_" + column]
+                bi_pred = bi_pred_df["bi_" + column]            
                 thisrow['auc'] = np.nan
                 thisrow['auprc'] = np.nan
             else:
@@ -176,9 +188,6 @@ def make_pred_multilabel(model, test_df, val_df, PATH_TO_IMAGES, device):
                     thrs.append(bestthr)
                     thisrow['bestthr'] = bestthr[0]
 
-                #print("column", column, " threshold:", bestthr[0])
-                #print("column", column, "AUC:", np.mean(bootstrapped_scores))
-
 
             except BaseException:
                 print("can't calculate auc for " + str(column))
@@ -186,14 +195,12 @@ def make_pred_multilabel(model, test_df, val_df, PATH_TO_IMAGES, device):
             if mode == "Threshold":
                 Eval_df = Eval_df.append(thisrow, ignore_index=True)
 
-
-
             if mode == "test":
                 TestEval_df = TestEval_df.append(thisrow, ignore_index=True)
 
-
         pred_df.to_csv("results/preds.csv", index=False)
         true_df.to_csv("results/True.csv", index=False)
+
 
         if mode == "Threshold":
             Eval_df.to_csv("results/Threshold.csv", index=False)
@@ -207,5 +214,5 @@ def make_pred_multilabel(model, test_df, val_df, PATH_TO_IMAGES, device):
 
     print("done")
 
-    return pred_df, Eval_df, bi_pred_df , TestEval_df # , bi_pred_df , Eval_bi_df
+    return pred_df, Eval_df, bi_pred_df, TestEval_df  # , bi_pred_df , Eval_bi_df
 

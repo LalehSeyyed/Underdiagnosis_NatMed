@@ -12,14 +12,12 @@ import torchvision.transforms as transforms
 import warnings
 warnings.filterwarnings("ignore")
 import pandas as pd
-from classification.dataset import MIMICCXRDataset
-from classification.utils import  checkpoint, save_checkpoint, Saved_items
-from classification.batchiterator import BatchIterator
+from dataset import NIH
+from utils import *
+from batchiterator import *
 from tqdm import tqdm
-
 import random
 import numpy as np
-
 
 
 def train(train_df, val_df, path_image, ModelType, CriterionType, device,LR):
@@ -27,39 +25,42 @@ def train(train_df, val_df, path_image, ModelType, CriterionType, device,LR):
 
 
     # Training parameters
-    batch_size = 48
+    BATCH_SIZE = 32
 
-    workers = 12  # mean: how many subprocesses to use for data loading.
-    N_LABELS = 14
+    WORKERS = 12  # mean: how many subprocesses to use for data loading.
+    N_LABELS = 15
     start_epoch = 0
     num_epochs = 64  # number of epochs to train for (if early stopping is not triggered)
 
-    random_seed = 47 #random.randint(0,100)
+    random_seed = 33 #random.randint(0,100)
     np.random.seed(random_seed)
     torch.manual_seed(random_seed)
+
+
+
 
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
 
     train_loader = torch.utils.data.DataLoader(
-        MIMICCXRDataset(train_df, path_image=path_image, transform=transforms.Compose([
+        NIH(train_df, path_image=path_image, transform=transforms.Compose([
                                                                     transforms.RandomHorizontalFlip(),
-                                                                    transforms.RandomRotation(15),
+                                                                    transforms.RandomRotation(10),
                                                                     transforms.Scale(256),
                                                                     transforms.CenterCrop(256),
                                                                     transforms.ToTensor(),
                                                                     normalize
                                                                 ])),
-        batch_size=batch_size, shuffle=True, num_workers=workers, pin_memory=True)
+        batch_size=BATCH_SIZE, shuffle=True, num_workers=WORKERS, pin_memory=True)
 
     val_loader = torch.utils.data.DataLoader(
-        MIMICCXRDataset(val_df,path_image=path_image, transform=transforms.Compose([
+        NIH(val_df,path_image=path_image, transform=transforms.Compose([
                                                                 transforms.Scale(256),
                                                                 transforms.CenterCrop(256),
                                                                 transforms.ToTensor(),
                                                                 normalize
                                                             ])),
-        batch_size=batch_size, shuffle=True, num_workers=workers, pin_memory=True)
+        batch_size=BATCH_SIZE, shuffle=True, num_workers=WORKERS, pin_memory=True)
 
     if ModelType == 'densenet':
         model = models.densenet121(pretrained=True)
@@ -69,7 +70,7 @@ def train(train_df, val_df, path_image, ModelType, CriterionType, device,LR):
         model.classifier = nn.Sequential(nn.Linear(num_ftrs, N_LABELS), nn.Sigmoid())
     
     if ModelType == 'Resume':
-        CheckPointData = torch.load('./results/checkpoint')
+        CheckPointData = torch.load('results/checkpoint')
         model = CheckPointData['model']
 
     if torch.cuda.device_count() > 1:
@@ -137,7 +138,7 @@ def train(train_df, val_df, path_image, ModelType, CriterionType, device,LR):
     print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
     Saved_items(epoch_losses_train, epoch_losses_val, time_elapsed, batch_size)
     #
-    checkpoint_best = torch.load('./results/checkpoint')
+    checkpoint_best = torch.load('results/checkpoint')
     model = checkpoint_best['model']
 
     best_epoch = checkpoint_best['best_epoch']
