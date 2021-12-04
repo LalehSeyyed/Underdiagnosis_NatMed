@@ -16,7 +16,7 @@ Note: We train 5 differenct model where all have the same hyper parameter and se
 
 Note: We are not able to share 'True_withMeta.csv' and 'bi_pred.csv' due to the data sharing agreement. However the developers are able to download the dataset from the original sourses. Then in the 'Splits' folder you can find the subject ID of train, test, and validation which help to produce the same splits as ours and regenerate same 'True_withMeta.csv'
 
-4 -  Run the coel "FPRFNR.py" to calculate:
+4 -  Run the code "FPRFNR.py" to calculate:
 a) FPR and FNR per subgroup stored as csv files: 
     FPR_FNR_NF_race.csv
     FPR_FNR_NF_insurance.csv
@@ -51,7 +51,7 @@ d) The number of images per intersection with actual NF = 1
 
 5 - rename the results forlder to add the random seed (e.g. for random seed 31 use results31) and copy the 'resultXX' (where XX is the utilized random seed) folder to the main main root of each dataset (e.g MIMIC folder).   
 
-Do the step 2 to 6 for all 5 runs per dataset.
+Do the step 2 to 5 for all 5 runs per dataset.
 
 6 - create a folder and call it "results" to save the results of combining the 5 run.
 
