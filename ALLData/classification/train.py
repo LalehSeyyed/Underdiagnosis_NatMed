@@ -12,55 +12,47 @@ import torchvision.transforms as transforms
 import warnings
 warnings.filterwarnings("ignore")
 import pandas as pd
-from classification.dataset import CheXpert
+from dataset import AllDatasetsShared
 from classification.utils import  checkpoint, save_checkpoint, saved_items
 from classification.batchiterator import batch_iterator
 from tqdm import tqdm
 import random
 import numpy as np
+from Config import train_df, val_df
 
 
+def train(modeltype, CRITERION, device,lr):
 
-def train(train_df, val_df, PATH_TO_IMAGES, modeltype, CRITERION, device,lr):
 
-
-    """
-        This function train the model.
-        
-        Arguments:
-        train_df : train dataframe 
-        val_df : validation dataframe 
-        PATH_TO_IMAGES: Path to the image directory on the server
-        modeltype: It is either densenet for training a densnet model or resume to load the last saved model and resume training
-        CRITERION: Loss function to calculate between predictions and outputs. e.g BCE loss
-        device: Device on which to run computation
-        lr: learning rate
-        
-        
-        Returns:
-        The function checlkpoint the best model in the result folder
-        model : best trained model
-        best_epoch: the epoch number of the best model
-       
-    """
 
     # Training parameters
     BATCH_SIZE = 48
 
     WORKERS = 12  # mean: how many subprocesses to use for data loading.
-    N_LABELS = 14
+    N_LABELS = 8
     start_epoch = 0
     num_epochs = 64  # number of epochs to train for (if early stopping is not triggered)
 
-    random_seed = 85 #random.randint(0,100)
+
+    val_df_size = len(val_df)
+    print("Validation_df path",val_df_size)
+
+   
+    train_df_size = len(train_df)
+    print("Train_df path", train_df_size)
+
+    random_seed = 3 #random.randint(0,100)
     np.random.seed(random_seed)
     torch.manual_seed(random_seed)
+
+
+
 
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
 
     train_loader = torch.utils.data.DataLoader(
-        CheXpert(train_df, path_image=PATH_TO_IMAGES, transform=transforms.Compose([
+        AllDatasetsShared(train_df, transform=transforms.Compose([
                                                                     transforms.RandomHorizontalFlip(),
                                                                     transforms.RandomRotation(15),
                                                                     transforms.Scale(256),
@@ -71,7 +63,7 @@ def train(train_df, val_df, PATH_TO_IMAGES, modeltype, CRITERION, device,lr):
         batch_size=BATCH_SIZE, shuffle=True, num_workers=WORKERS, pin_memory=True)
 
     val_loader = torch.utils.data.DataLoader(
-        CheXpert(val_df,path_image=PATH_TO_IMAGES, transform=transforms.Compose([
+        AllDatasetsShared(val_df, transform=transforms.Compose([
                                                                 transforms.Scale(256),
                                                                 transforms.CenterCrop(256),
                                                                 transforms.ToTensor(),
@@ -85,9 +77,8 @@ def train(train_df, val_df, PATH_TO_IMAGES, modeltype, CRITERION, device,lr):
 
 
         model.classifier = nn.Sequential(nn.Linear(num_ftrs, N_LABELS), nn.Sigmoid())
+         
     
-
-
     if modeltype == 'resume':
         CheckPointData = torch.load('results/checkpoint')
         model = CheckPointData['model']
@@ -140,17 +131,17 @@ def train(train_df, val_df, PATH_TO_IMAGES, modeltype, CRITERION, device,lr):
         with open("results/log_train", 'a') as logfile:
             logwriter = csv.writer(logfile, delimiter=',')
             if (epoch == 1):
-                logwriter.writerow(["epoch", "train_loss", "val_loss", "seed", "lr"])
-            logwriter.writerow([epoch, epoch_loss_train, epoch_loss_val, random_seed, lr])
+                logwriter.writerow(["epoch", "train_loss", "val_loss","seed","lr"])
+            logwriter.writerow([epoch, epoch_loss_train, epoch_loss_val,random_seed, lr])
 # -------------------------- End of phase
 
         # break if no val loss improvement in 3 epochs
         if ((epoch - best_epoch) >= 3):
             if epoch_loss_val > best_loss:
                 print("decay loss from " + str(lr) + " to " + str(lr / 2) + " as not seeing improvement in val loss")
-                lr = lr / 2
+                LR = lr / 2
                 print("created new optimizer with lr " + str(lr))
-                if ((epoch - best_epoch) >= 10):
+                if ((epoch - best_epoch) >= 5):
                     print("no improvement in 10 epochs, break")
                     break
         #old_epoch = epoch 

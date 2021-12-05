@@ -2,7 +2,7 @@ import torch
 import os
 
 
-def Saved_items(epoch_losses_train, epoch_losses_val, time_elapsed, batch_size):
+def saved_items(epoch_losses_train, epoch_losses_val, time_elapsed, batch_size):
     """
     Saves checkpoint of torchvision model during training.
     Args:

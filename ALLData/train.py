@@ -13,24 +13,22 @@ import warnings
 warnings.filterwarnings("ignore")
 import pandas as pd
 from dataset import AllDatasetsShared
-from utils import *
-from batchiterator import *
+from classification.utils import  checkpoint, save_checkpoint, Saved_items
+from classification.batchiterator import batch_iterator
 from tqdm import tqdm
-
-#from ResNetModel import ResNet50NN
 import random
 import numpy as np
 from Config import train_df, val_df
 
 
-def ModelTrain(ModelType, CriterionType, device,LR):
+def train(modeltype, CRITERION, device,lr):
 
 
 
     # Training parameters
-    batch_size = 48
+    BATCH_SIZE = 48
 
-    workers = 12  # mean: how many subprocesses to use for data loading.
+    WORKERS = 12  # mean: how many subprocesses to use for data loading.
     N_LABELS = 8
     start_epoch = 0
     num_epochs = 64  # number of epochs to train for (if early stopping is not triggered)
@@ -62,7 +60,7 @@ def ModelTrain(ModelType, CriterionType, device,LR):
                                                                     transforms.ToTensor(),
                                                                     normalize
                                                                 ])),
-        batch_size=batch_size, shuffle=True, num_workers=workers, pin_memory=True)
+        batch_size=BATCH_SIZE, shuffle=True, num_workers=WORKERS, pin_memory=True)
 
     val_loader = torch.utils.data.DataLoader(
         AllDatasetsShared(val_df, transform=transforms.Compose([
@@ -71,9 +69,9 @@ def ModelTrain(ModelType, CriterionType, device,LR):
                                                                 transforms.ToTensor(),
                                                                 normalize
                                                             ])),
-        batch_size=batch_size, shuffle=True, num_workers=workers, pin_memory=True)
+        batch_size=BATCH_SIZE, shuffle=True, num_workers=WORKERS, pin_memory=True)
 
-    if ModelType == 'densenet':
+    if modeltype == 'densenet':
         model = models.densenet121(pretrained=True)
         num_ftrs = model.classifier.in_features
 
@@ -81,15 +79,7 @@ def ModelTrain(ModelType, CriterionType, device,LR):
         model.classifier = nn.Sequential(nn.Linear(num_ftrs, N_LABELS), nn.Sigmoid())
          
     
-    if ModelType == 'ResNet50':
-#         model = models.resnet50(pretrained=True)
-#         num_ftrs = model.fc.in_features
-#         print(num_ftrs)
-#         print(N_LABELS)
-#         model.classifier = nn.Sequential(nn.Linear(num_ftrs, N_LABELS), nn.Sigmoid())
-        model = ResNet50NN()
-    
-    if ModelType == 'Resume':
+    if modeltype == 'resume':
         CheckPointData = torch.load('results/checkpoint')
         model = CheckPointData['model']
 
@@ -101,7 +91,7 @@ def ModelTrain(ModelType, CriterionType, device,LR):
 
     model = model.to(device)
     
-    if CriterionType == 'BCELoss':
+    if CRITERION == 'BCELoss':
         criterion = nn.BCELoss().to(device)
 
     epoch_losses_train = []
@@ -118,15 +108,15 @@ def ModelTrain(ModelType, CriterionType, device,LR):
 # -------------------------- Start of phase
 
         phase = 'train'
-        optimizer = torch.optim.Adam(params=filter(lambda p: p.requires_grad, model.parameters()), lr=LR)
-        running_loss = BatchIterator(model=model, phase=phase, Data_loader=train_loader, criterion=criterion, optimizer=optimizer, device=device)
+        optimizer = torch.optim.Adam(params=filter(lambda p: p.requires_grad, model.parameters()), lr=lr)
+        running_loss = batch_iterator(model=model, phase=phase, Data_loader=train_loader, criterion=criterion, optimizer=optimizer, device=device)
         epoch_loss_train = running_loss / train_df_size
         epoch_losses_train.append(epoch_loss_train.item())
         print("Train_losses:", epoch_losses_train)
 
         phase = 'val'
-        optimizer = torch.optim.Adam(params=filter(lambda p: p.requires_grad, model.parameters()), lr=LR)
-        running_loss = BatchIterator(model=model, phase=phase, Data_loader=val_loader, criterion=criterion, optimizer=optimizer, device=device)
+        optimizer = torch.optim.Adam(params=filter(lambda p: p.requires_grad, model.parameters()), lr=lr)
+        running_loss = batch_iterator(model=model, phase=phase, Data_loader=val_loader, criterion=criterion, optimizer=optimizer, device=device)
         epoch_loss_val = running_loss / val_df_size
         epoch_losses_val.append(epoch_loss_val.item())
         print("Validation_losses:", epoch_losses_val)
@@ -135,22 +125,22 @@ def ModelTrain(ModelType, CriterionType, device,LR):
         if epoch_loss_val < best_loss:
             best_loss = epoch_loss_val
             best_epoch = epoch
-            checkpoint(model, best_loss, best_epoch, LR)
+            checkpoint(model, best_loss, best_epoch, lr)
 
                 # log training and validation loss over each epoch
         with open("results/log_train", 'a') as logfile:
             logwriter = csv.writer(logfile, delimiter=',')
             if (epoch == 1):
-                logwriter.writerow(["epoch", "train_loss", "val_loss","Seed","LR"])
-            logwriter.writerow([epoch, epoch_loss_train, epoch_loss_val,random_seed, LR])
+                logwriter.writerow(["epoch", "train_loss", "val_loss","seed","lr"])
+            logwriter.writerow([epoch, epoch_loss_train, epoch_loss_val,random_seed, lr])
 # -------------------------- End of phase
 
         # break if no val loss improvement in 3 epochs
         if ((epoch - best_epoch) >= 3):
             if epoch_loss_val > best_loss:
-                print("decay loss from " + str(LR) + " to " + str(LR / 2) + " as not seeing improvement in val loss")
-                LR = LR / 2
-                print("created new optimizer with LR " + str(LR))
+                print("decay loss from " + str(lr) + " to " + str(lr / 2) + " as not seeing improvement in val loss")
+                LR = lr / 2
+                print("created new optimizer with lr " + str(lr))
                 if ((epoch - best_epoch) >= 5):
                     print("no improvement in 10 epochs, break")
                     break
@@ -158,7 +148,7 @@ def ModelTrain(ModelType, CriterionType, device,LR):
     #------------------------- End of epoch loop
     time_elapsed = time.time() - since
     print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
-    Saved_items(epoch_losses_train, epoch_losses_val, time_elapsed, batch_size)
+    Saved_items(epoch_losses_train, epoch_losses_val, time_elapsed, BATCH_SIZE)
     #
     checkpoint_best = torch.load('results/checkpoint')
     model = checkpoint_best['model']

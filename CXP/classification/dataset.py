@@ -10,7 +10,7 @@ class CheXpert(Dataset):
     def __init__(self, dataframe, PATH_TO_IMAGES, transform=None):
         
         """
-            Dataset class representing ChestX-ray14 dataset
+            Dataset class representing CheXpert dataset
             
             Arguments:
             dataframe: Whether the dataset represents the train, test, or validation split

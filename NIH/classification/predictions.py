@@ -18,6 +18,7 @@ def make_pred_multilabel(model, test_df, val_df, PATH_TO_IMAGES, device):
         val_df : validation dataframe -- to evaluate the threshold for binary classificaion
         test_df : test dataframe 
         PATH_TO_IMAGES: Path to the image directory on the server
+        device: Device on which to run computation
         
         Returns:
         pred_df.csv: dataframe containing individual predictions for each test image

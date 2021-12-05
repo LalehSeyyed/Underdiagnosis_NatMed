@@ -13,7 +13,7 @@ import warnings
 warnings.filterwarnings("ignore")
 import pandas as pd
 from classification.dataset import NIH
-from classification.utils import  checkpoint, save_checkpoint, Saved_items
+from classification.utils import  checkpoint, save_checkpoint, saved_items
 from classification.batchiterator import batch_iterator
 from tqdm import tqdm
 import random
@@ -154,7 +154,7 @@ def train(train_df, val_df, PATH_TO_IMAGES, modeltype, CRITERION, device,lr):
     #------------------------- End of epoch loop
     time_elapsed = time.time() - since
     print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
-    Saved_items(epoch_losses_train, epoch_losses_val, time_elapsed, BATCH_SIZE)
+    saved_items(epoch_losses_train, epoch_losses_val, time_elapsed, BATCH_SIZE)
     #
     checkpoint_best = torch.load('results/checkpoint')
     model = checkpoint_best['model']

@@ -9,10 +9,25 @@ from PIL import Image
 
 class AllDatasetsShared(Dataset):
     def __init__(self, dataframe, finding="any", transform=None):
+        
+                
+        """
+            Dataset class representing the aggregation on all three datasets.
+            Initially in the Config.py we have aggregated all CheCpert, MIMIC-CXR and ChestX-ray14 datasets on the 8 shared labels. 
+            
+            Arguments:
+            dataframe: Whether the dataset represents the train, test, or validation split
+            PATH_TO_IMAGES: Path to the image directory on the server
+            transform: Whether conduct transform to the images or not
+            
+            Returns:
+            image, label and item["Jointpath"] as the unique indicator of each item in the dataloader.
+        """
+        
+        
+        
         self.dataframe = dataframe
-        # Total number of datapoints
-        self.dataset_size = self.dataframe.shape[0]
-        self.finding = finding
+        self.dataset_size = self.dataframe.shape[0]        
         self.transform = transform      
         self.PRED_LABEL = ['No Finding', 'Atelectasis', 'Cardiomegaly', 'Pleural Effusion', 'Pneumonia', 'Pneumothorax', 'Consolidation','Edema' ]
 
@@ -33,14 +48,14 @@ class AllDatasetsShared(Dataset):
         if self.transform is not None:
             img = self.transform(img)
 
-        # label = np.zeros(len(self.PRED_LABEL), dtype=int)
+        
         label = torch.FloatTensor(np.zeros(len(self.PRED_LABEL), dtype=float))
         for i in range(0, len(self.PRED_LABEL)):
 
             if (self.dataframe[self.PRED_LABEL[i].strip()].iloc[idx].astype('float') > 0):
                 label[i] = self.dataframe[self.PRED_LABEL[i].strip()].iloc[idx].astype('float')
 
-        return img, label, item["Jointpath"]#self.dataframe.index[idx]
+        return img, label, item["Jointpath"]
 
     def __len__(self):
         return self.dataset_size
