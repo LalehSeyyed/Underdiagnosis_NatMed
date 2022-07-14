@@ -10,6 +10,21 @@ In this paper, we demonstrate underdiagnosis bias in AI-based chest X-ray diagno
 
 This repository provide the code for the paper. Here for each of the three prominent public chest X-ray datasets MIMIC-CXR (MIMIC), Chest-Xray14 (NIH), CheXpert (CXP), as well as a multi-site aggregation of all those datasets (ALLData) we train convolution neural networks (CNN) on 14, 15, 14 and 8 diagnostic labels, respectively. Among the labels of each dataset there is a 'No Finding' label which indicates the absence of the disease labels. The focus of this study is on the 'No Finding' label. Because false positive outcome on 'No Finding' (underdiagnosis) means falsely claiming the patient is healthy while they are not, which may leads to no clinical treatment when a patient needs it most. 
 
+
+This code is also a good learning resource for researcher/students interested in training multi-label medical image pathology classifiers.
+
+Citation in Bibtex format:
+
+
+@article{Underdiagnosis_2021,
+  title={Underdiagnosis bias of artificial intelligence algorithms applied to chest radiographs in under-served patient populations},
+  author={Seyyed-Kalantari, Laleh and Zhang, Haoran and McDermott, Matthew and Chen, Irene and Marzyeh, Ghassemi},
+  journal={Nature Medicine},
+  volume={27},
+  pages={2176–2182},
+  year={2021}
+}
+
 ----------------------------------------------------------------------------------------------------------------------------
 ## Dataset access:
 All three MIMIC-CXR, CheXpert, and ChestX-ray14 datasets used for this work are public under data use agreements. 
